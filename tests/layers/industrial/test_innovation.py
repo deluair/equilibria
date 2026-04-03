@@ -89,4 +89,4 @@ def test_schumpeterian_test_inverted_u():
     result = InnovationEconomics._schumpeterian_test(hhi, patents)
     assert result is not None
     assert "inverted_u_detected" in result
-    assert result["inverted_u_detected"] is True
+    assert result["inverted_u_detected"]

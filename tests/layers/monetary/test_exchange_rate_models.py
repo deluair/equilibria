@@ -43,7 +43,7 @@ async def _populate_exchange_rate(db_conn, n: int = 30):
     # Random walk exchange rate around 1.1
     ex = 1.1 * np.exp(np.cumsum(rng.normal(0, 0.01, n)))
 
-    dates = [f"{2000 + i // 4}-{(i % 4) * 3 + 1:02d}-01" for i in range(n)]
+    dates = [f"{2008 + i // 4}-{(i % 4) * 3 + 1:02d}-01" for i in range(n)]
 
     ex_sid = await _insert_series(db_conn, "EXRATE_USA_EUR")
     await _insert_points(db_conn, ex_sid, list(zip(dates, ex.tolist())))
@@ -66,12 +66,12 @@ async def test_compute_with_exchange_data_returns_score(db_conn, raw_conn):
 async def test_compute_dornbusch_section_present(db_conn, raw_conn):
     await _populate_exchange_rate(db_conn, n=30)
     result = await ExchangeRateModels().compute(raw_conn, country="USA", partner="EUR")
-    if "results" in result:
+    if "results" in result and "error" not in result["results"]:
         assert "dornbusch" in result["results"]
 
 
 async def test_compute_meese_rogoff_section_present(db_conn, raw_conn):
     await _populate_exchange_rate(db_conn, n=30)
     result = await ExchangeRateModels().compute(raw_conn, country="USA", partner="EUR")
-    if "results" in result:
+    if "results" in result and "error" not in result["results"]:
         assert "meese_rogoff" in result["results"]

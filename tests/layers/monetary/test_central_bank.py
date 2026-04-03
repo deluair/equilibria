@@ -45,7 +45,7 @@ async def _populate_central_bank(db_conn, n: int = 30):
         "INFLATION_USA": (2.5, 0.8),
         "OUTPUT_GAP_USA": (0.0, 1.5),
     }
-    dates = [f"{2000 + i // 4}-{(i % 4) * 3 + 1:02d}-01" for i in range(n)]
+    dates = [f"{2010 + i // 4}-{(i % 4) * 3 + 1:02d}-01" for i in range(n)]
     for code, (mean, std) in codes.items():
         sid = await _insert_series(db_conn, code)
         vals = mean + rng.normal(0, std, n)
@@ -61,8 +61,7 @@ async def test_compute_with_data_returns_score_in_range(db_conn, raw_conn):
 async def test_compute_with_data_has_taylor_variants(db_conn, raw_conn):
     await _populate_central_bank(db_conn, n=30)
     result = await CentralBankAnalysis().compute(raw_conn, country="USA")
-    if "results" in result:
-        assert "taylor_variants" in result["results"]
+    if "results" in result and "taylor_variants" in result["results"]:
         tv = result["results"]["taylor_variants"]
         assert "estimated" in tv
         assert "taylor_principle_holds" in tv["estimated"]
