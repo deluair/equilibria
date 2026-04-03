@@ -49,6 +49,15 @@ async def test_results_has_linear_key(db_conn):
 
 
 async def test_target_country_depth_class(db_conn):
+    # Need enough obs to pass the 30-row threshold; use 15 countries
+    for i in range(15):
+        iso = f"FT{i:02d}"
+        for yr in range(2000, 2006):
+            sid_cr = await insert_series(db_conn, "FS.AST.PRVT.GD.ZS", iso)
+            await insert_point(db_conn, sid_cr, str(yr), 20.0 + i * 5)
+            sid_gr = await insert_series(db_conn, "NY.GDP.MKTP.KD.ZG", iso)
+            await insert_point(db_conn, sid_gr, str(yr), 2.0 + i * 0.3)
+    # Also insert target country
     iso = "BGD"
     for yr in range(2000, 2006):
         sid_cr = await insert_series(db_conn, "FS.AST.PRVT.GD.ZS", iso)
@@ -57,6 +66,8 @@ async def test_target_country_depth_class(db_conn):
         await insert_point(db_conn, sid_gr, str(yr), 5.0)
 
     result = await FinanceDevelopmentGrowth().compute(db_conn, country_iso3="BGD")
+    assert "results" in result
+    assert "country_iso3" in result["results"]
     assert result["results"]["country_iso3"] == "BGD"
     target = result["results"].get("target")
     if target:

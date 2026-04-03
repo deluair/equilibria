@@ -33,9 +33,13 @@ async def db_conn(test_db):
         await conn.execute("ALTER TABLE data_series ADD COLUMN code TEXT")
     except Exception:
         pass  # column already exists
-    # Alias execute_fetchall to fetch_all
-    if not hasattr(conn, "execute_fetchall"):
-        conn.execute_fetchall = conn.fetch_all
+    # Energy modules access rows as r[0], r[1] (tuple indexing), but fetch_all
+    # returns list[dict].  Wrap execute_fetchall to convert dicts -> tuples.
+    async def _execute_fetchall(sql: str, params: tuple = ()) -> list[tuple]:
+        rows = await conn.fetch_all(sql, params)
+        return [tuple(r.values()) for r in rows]
+
+    conn.execute_fetchall = _execute_fetchall
     yield conn
     await release_db(conn)
 

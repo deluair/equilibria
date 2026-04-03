@@ -77,7 +77,7 @@ async def test_compute_with_tfr_data(db_conn):
     tfr_trend = result["results"].get("tfr_trend")
     if tfr_trend:
         assert "latest_tfr" in tfr_trend
-        assert tfr_trend["declining"] is True
+        assert tfr_trend["declining"]  # True or np.True_
 
 
 async def test_compute_with_demographic_transition_data(db_conn):
