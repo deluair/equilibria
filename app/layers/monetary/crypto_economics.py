@@ -237,8 +237,6 @@ class CryptoEconomics(LayerBase):
 
             if len(deposits) >= 8:
                 dep_growth = np.diff(deposits) / np.maximum(deposits[:-1], 1e-10) * 100
-                t = np.arange(len(deposits), dtype=float)
-                trend = np.polyfit(t, deposits, 1)
 
                 # Structural change in deposit growth (proxy for CBDC/crypto substitution)
                 mid = len(dep_growth) // 2

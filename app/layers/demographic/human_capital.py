@@ -40,7 +40,7 @@ good returns -> STABLE, low investment or poor returns -> STRESS.
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize, stats
+from scipy import stats
 
 from app.layers.base import LayerBase
 

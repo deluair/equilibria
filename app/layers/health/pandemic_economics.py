@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import numpy as np
 from scipy import integrate
+from scipy.stats import linregress
 
 from app.layers.base import LayerBase
 
@@ -258,14 +259,6 @@ class PandemicEconomics(LayerBase):
                     # Fit trend on pre-2020 data (assume last few years may have pandemic)
                     # Use all but last 3 years for trend
                     n_trend = max(5, len(vals) - 3)
-                    slope, intercept, _, _, _ = np.linalg.lstsq(
-                        np.column_stack([np.ones(n_trend), t_arr[:n_trend]]),
-                        vals[:n_trend],
-                        rcond=None,
-                    )[0:2]  # unpack first 2
-
-                    # Actually, linregress is cleaner
-                    from scipy.stats import linregress
                     sl, inter, _, _, _ = linregress(t_arr[:n_trend], vals[:n_trend])
 
                     # Predict for recent years

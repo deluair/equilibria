@@ -88,17 +88,6 @@ class NutritionEconomics(LayerBase):
             """
         )
 
-        # Food price inflation (CPI food index)
-        food_cpi_rows = await db.fetch_all(
-            """
-            SELECT ds.country_iso3, dp.date, dp.value
-            FROM data_series ds
-            JOIN data_points dp ON dp.series_id = ds.id
-            WHERE ds.series_id = 'FP.CPI.TOTL.ZG'
-            ORDER BY ds.country_iso3, dp.date
-            """
-        )
-
         # Prevalence of anemia in women
         anemia_rows = await db.fetch_all(
             """
@@ -232,8 +221,6 @@ class NutritionEconomics(LayerBase):
         # Iron deficiency (anemia proxy) reduces GDP by 0.5-2% in developing countries.
         deficiency_costs = None
         if country_iso3 and country_iso3 in gdppc_data:
-            gdp_years = gdppc_data[country_iso3]
-            latest_yr = sorted(gdp_years.keys())[-1]
             costs = {}
 
             # Stunting productivity loss

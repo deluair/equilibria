@@ -1,9 +1,9 @@
-from app.layers.demographic.fertility import FertilityEconomics
 from app.layers.demographic.aging import AgingEconomics
+from app.layers.demographic.child_development import ChildDevelopment
+from app.layers.demographic.fertility import FertilityEconomics
+from app.layers.demographic.gender_economics import GenderEconomics
 from app.layers.demographic.human_capital import HumanCapitalAccumulation
 from app.layers.demographic.population_growth import PopulationGrowth
-from app.layers.demographic.gender_economics import GenderEconomics
-from app.layers.demographic.child_development import ChildDevelopment
 
 ALL_MODULES = [
     FertilityEconomics,
