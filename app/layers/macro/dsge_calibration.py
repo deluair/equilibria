@@ -38,7 +38,7 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import linalg as sp_linalg, optimize as sp_optimize
+from scipy import linalg as sp_linalg
 
 from app.layers.base import LayerBase
 
@@ -170,7 +170,6 @@ class DSGECalibration(LayerBase):
         phi_x_est = max(float(beta_tr[2]), 0.01)
 
         # Estimate Phillips curve slope via OLS: pi_t = c + kappa*x_t + e
-        X_pc = np.column_stack([np.ones(n), x[-n:]])
         # Use first-differenced inflation as proxy for beta*E[pi_{t+1}] term
         dpi = np.diff(pi[-n:])
         pi_lhs = pi[-n:][1:] - prior["beta"] * pi[-n:][:-1]
@@ -360,11 +359,9 @@ class DSGECalibration(LayerBase):
 
         var_irfs = {}
         var_names = ["output_gap", "inflation", "interest_rate"]
-        F_power = np.eye(kp)
         for shock_idx in range(k):
             shock_label = ["demand", "supply", "monetary"][shock_idx]
             irf_dict = {}
-            F_power_h = np.eye(kp)
             for var_idx, var_name in enumerate(var_names):
                 vals = []
                 F_h = np.eye(kp)

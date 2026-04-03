@@ -43,7 +43,7 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize as sp_optimize, stats as sp_stats
+from scipy import optimize as sp_optimize
 
 from app.layers.base import LayerBase
 

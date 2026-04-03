@@ -252,7 +252,6 @@ class SpatialEconometrics(LayerBase):
             M = np.eye(n) - X @ np.linalg.pinv(X.T @ X) @ X.T
 
         # Trace terms
-        WpW = W.T + W
         T = np.trace(W @ W + W.T @ W)
 
         # LM-Lag: (e'Wy / sigma2)^2 / (((MWXb)'(MWXb)/sigma2) + T)

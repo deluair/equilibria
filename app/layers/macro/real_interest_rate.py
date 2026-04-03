@@ -146,9 +146,8 @@ class RealInterestRate(LayerBase):
             lw_result = self._laubach_williams(real_rate, inflation, y_gap)
             results["laubach_williams"] = lw_result
 
-            r_star_lw = lw_result.get("r_star_latest", r_star_hp)
+            lw_result.get("r_star_latest", r_star_hp)
         else:
-            r_star_lw = r_star_hp
             results["laubach_williams"] = {"note": "output gap data unavailable"}
 
         # --- Approach 3: Simple state-space (Kalman filter) ---
@@ -219,10 +218,10 @@ class RealInterestRate(LayerBase):
             D[i, i + 1] = -2
             D[i, i + 2] = 1
 
-        I = np.eye(T)
+        eye = np.eye(T)
         # Minimize: (y - tau)' (y - tau) + lambda * (D * tau)' (D * tau)
         # Solution: tau = (I + lambda * D'D)^{-1} y
-        A = I + lam * D.T @ D
+        A = eye + lam * D.T @ D
         try:
             trend = np.linalg.solve(A, y)
         except np.linalg.LinAlgError:
@@ -305,7 +304,6 @@ class RealInterestRate(LayerBase):
             r_star_pred = r_star[t - 1]
 
             # Update based on IS equation residual
-            r_gap_t = real_rate[t] - r_star_pred
             # If output gap is positive and r is below r*, r* should be lower
             innovation = 0.0
             if t >= 2:

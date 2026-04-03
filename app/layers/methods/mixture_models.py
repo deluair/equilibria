@@ -177,7 +177,6 @@ class MixtureModels(LayerBase):
                 "iterations": 1,
             }
 
-        rng = np.random.default_rng(42)
         # Initialize with quantile-based means
         percentiles = np.linspace(100 / (K + 1), 100 * K / (K + 1), K)
         mu = np.percentile(data, percentiles)
@@ -268,7 +267,6 @@ class MixtureModels(LayerBase):
     def _latent_class_regression(X: np.ndarray, y: np.ndarray, K: int,
                                  components: list) -> dict | None:
         """Class-specific OLS regressions weighted by posterior membership."""
-        n = len(y)
         posteriors = MixtureModels._compute_posteriors(y, components)
         class_betas = {}
         for k in range(K):

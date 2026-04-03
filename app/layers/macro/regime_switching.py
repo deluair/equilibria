@@ -34,7 +34,7 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize as sp_optimize, stats as sp_stats
+from scipy import stats as sp_stats
 
 from app.layers.base import LayerBase
 
@@ -232,8 +232,6 @@ class RegimeSwitching(LayerBase):
             else:
                 pi_0 = (1.0 - p00) / denom
             xi_pred[0] = pi_0
-
-            P_trans = np.array([[p00, 1 - p00], [1 - p11, p11]])
 
             for t in range(T):
                 # Conditional densities

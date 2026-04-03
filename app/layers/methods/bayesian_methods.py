@@ -105,8 +105,6 @@ class BayesianMethods(LayerBase):
             X = np.ones((n, 1))
             var_names = ["constant"]
 
-        k = X.shape[1]
-
         if method == "bvar":
             result = self._bayesian_var(y, n_draws, n_burn)
         elif method == "bma":
@@ -443,7 +441,7 @@ class BayesianMethods(LayerBase):
         resid = y - y_pred
 
         # Test statistics: skewness and kurtosis of residuals
-        from scipy.stats import skew, kurtosis, normaltest
+        from scipy.stats import kurtosis, normaltest, skew
         obs_skew = float(skew(resid))
         obs_kurt = float(kurtosis(resid))
 

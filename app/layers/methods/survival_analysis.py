@@ -217,7 +217,6 @@ class SurvivalAnalysis(LayerBase):
 
         # Sort by time (descending for risk set computation)
         order = np.argsort(-T)
-        T_s = T[order]
         E_s = E[order]
         X_s = X[order]
 
@@ -302,7 +301,6 @@ class SurvivalAnalysis(LayerBase):
         # Simple test: compare observed variance of hazard to Poisson expectation
         # If over-dispersed, suggests frailty
         n = len(T)
-        event_rate = float(np.mean(E))
         # Split into time bins
         n_bins = max(5, n // 10)
         bin_edges = np.percentile(T, np.linspace(0, 100, n_bins + 1))
