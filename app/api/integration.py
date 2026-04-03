@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Response
 
-from app.db import fetch_all, fetch_one
+from app.db import fetch_all, fetch_one, get_db, release_db
+from app.layers.integration.attribution import LayerAttribution
+from app.layers.integration.country_profile import CountryProfile
+from app.layers.integration.crisis_comparison import CrisisComparison
 
 router = APIRouter(prefix="/integration", tags=["integration"])
 
@@ -84,7 +87,12 @@ async def layer_attribution(
 ) -> dict[str, Any]:
     """Layer attribution analysis (what drives the composite)."""
     response.headers["Cache-Control"] = CACHE_1H
-    raise HTTPException(status_code=501, detail="Layer attribution not yet implemented")
+    db = await get_db()
+    try:
+        result = await LayerAttribution().run(db)
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/crisis-comparison")
@@ -93,7 +101,12 @@ async def crisis_comparison(
 ) -> dict[str, Any]:
     """Historical crisis comparison (Asian 1997, GFC 2008, Euro 2012, COVID 2020)."""
     response.headers["Cache-Control"] = CACHE_1H
-    raise HTTPException(status_code=501, detail="Crisis comparison not yet implemented")
+    db = await get_db()
+    try:
+        result = await CrisisComparison().run(db)
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/country/{iso3}")
@@ -104,4 +117,9 @@ async def country_profile(
     """Full 6-layer country risk profile."""
     response.headers["Cache-Control"] = CACHE_1H
     iso3 = iso3.upper()
-    raise HTTPException(status_code=501, detail="Country profile not yet implemented")
+    db = await get_db()
+    try:
+        result = await CountryProfile().run(db, country_iso3=iso3)
+        return result
+    finally:
+        await release_db(db)
