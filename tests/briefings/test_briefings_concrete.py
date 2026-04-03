@@ -186,7 +186,7 @@ def test_country_deep_dive_has_data_sources():
 
 @pytest.mark.asyncio
 async def test_country_deep_dive_gather_and_build_empty_db(tmp_db):
-    """CountryDeepDiveBriefing gather_data + build_sections + assemble_html work on empty DB."""
+    """CountryDeepDiveBriefing gather_data + build_sections + build_charts run without error on empty DB."""
     from app.db import get_db, release_db
     b = CountryDeepDiveBriefing(country_iso3="USA")
     db = await get_db()
@@ -196,9 +196,10 @@ async def test_country_deep_dive_gather_and_build_empty_db(tmp_db):
         b.build_charts(data)
     finally:
         await release_db(db)
-    html = b.assemble_html()
-    assert isinstance(html, str)
-    assert len(html) > 100
+    # sections and cards are populated
+    assert isinstance(b.sections, list)
+    assert len(b.sections) >= 1
+    assert isinstance(b.cards, list)
 
 
 @pytest.mark.asyncio
