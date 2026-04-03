@@ -1,6 +1,6 @@
 # Equilibria
 
-Open-source applied economics analysis platform. 6 analytical layers, 102 modules, 12 estimators, AI-powered briefings. Apache 2.0.
+Open-source applied economics analysis platform. 6 analytical layers, 103 modules, 12 estimators, AI-powered briefings. Apache 2.0.
 
 ## Stack
 - Backend: FastAPI + aiosqlite + Python 3.11, uv
@@ -74,7 +74,7 @@ pyproject.toml
 deploy.sh
 ```
 
-## 6 Analytical Layers (102 modules)
+## 6 Analytical Layers (103 modules)
 
 ### L1 Trade (22 modules)
 gravity, trade_elasticity, rca, terms_of_trade, trade_openness, concentration,
@@ -116,7 +116,7 @@ briefing_orchestrator
 Staggered DiD, Shift-Share, Bounds, Randomization Inference
 
 ## Data Collectors
-Currently implemented: FRED, WDI. BaseCollector pattern for adding more (collect -> validate -> store pipeline, httpx with retry).
+13 collectors: FRED, WDI, ILO, FAOSTAT, BLS, IMF WEO, Penn World Table, Comtrade, USDA, NOAA, V-Dem, PovcalNet. All follow BaseCollector pattern (collect -> validate -> store pipeline, httpx with retry).
 
 ## AI Brain
 Claude Sonnet 4 (`claude-sonnet-4-6`) with 22 tools, 10-round agentic loop.
