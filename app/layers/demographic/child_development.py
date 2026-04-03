@@ -156,7 +156,8 @@ class ChildDevelopment(LayerBase):
         prepri_data = _index(preprimary_rows) if preprimary_rows else {}
         edu_exp_data = _index(edu_exp_rows) if edu_exp_rows else {}
         u5mr_data = _index(u5mr_rows) if u5mr_rows else {}
-        gdppc_data = _index(gdppc_rows) if gdppc_rows else {}
+        tfr_data = _index(tfr_rows) if tfr_rows else {}
+        gdppc_data = _index(gdppc_rows) if gdppc_rows else {}  # noqa: F841
         hci_data = _index(hci_rows) if hci_rows else {}
 
         # --- Heckman equation: early investment returns ---
@@ -317,13 +318,11 @@ class ChildDevelopment(LayerBase):
         # Use TFR vs. HCI relationship: higher fertility -> lower per-child investment
         birth_order = None
         tfr_list, hci_bo_list = [], []
-        for iso in set(hci_data.keys()) & set(
-            {r["country_iso3"] for r in (tfr_rows or [])}
-        ):
-            tfr_yrs = _index(tfr_rows or []).get(iso, {}) if tfr_rows else {}
-            hci_yrs = hci_data.get(iso, {})
-            t_latest = sorted(tfr_yrs.keys()) if tfr_yrs else []
-            h_latest = sorted(hci_yrs.keys()) if hci_yrs else []
+        for iso in set(hci_data.keys()) & set(tfr_data.keys()):
+            tfr_yrs = tfr_data[iso]
+            hci_yrs = hci_data[iso]
+            t_latest = sorted(tfr_yrs.keys())
+            h_latest = sorted(hci_yrs.keys())
             if t_latest and h_latest:
                 t_val = tfr_yrs[t_latest[-1]]
                 h_val = hci_yrs[h_latest[-1]]
