@@ -46,13 +46,13 @@ async def test_results_has_baseline_key(db_conn):
     for i, iso in enumerate(isos):
         for yr in range(2005, 2012):
             sid_oda = await insert_series(db_conn, "DT.ODA.ODAT.GN.ZS", iso)
-            await insert_point(db_conn, sid_oda, str(yr), 3.0)
+            await insert_point(db_conn, sid_oda, str(yr), 1.0 + i * 0.5 + yr * 0.1)
             sid_gdp = await insert_series(db_conn, "NY.GDP.MKTP.KD.ZG", iso)
-            await insert_point(db_conn, sid_gdp, str(yr), 2.5)
+            await insert_point(db_conn, sid_gdp, str(yr), 1.0 + i * 0.3 - yr * 0.05)
             sid_inf = await insert_series(db_conn, "FP.CPI.TOTL.ZG", iso)
-            await insert_point(db_conn, sid_inf, str(yr), 6.0)
+            await insert_point(db_conn, sid_inf, str(yr), 3.0 + i * 0.7)
             sid_tr = await insert_series(db_conn, "NE.TRD.GNFS.ZS", iso)
-            await insert_point(db_conn, sid_tr, str(yr), 50.0)
+            await insert_point(db_conn, sid_tr, str(yr), 30.0 + i * 3)
 
     result = await AidEffectiveness().compute(db_conn)
     assert "results" in result

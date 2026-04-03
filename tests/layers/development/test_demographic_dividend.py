@@ -25,10 +25,10 @@ async def test_score_in_range_with_data(db_conn):
         iso = f"DD{i:02d}"
         for yr in range(2000, 2008):
             sid_dep = await insert_series(db_conn, "SP.POP.DPND", iso)
-            # Declining dependency = dividend opening
-            await insert_point(db_conn, sid_dep, str(yr), 80.0 - (yr - 2000) * 0.5)
+            # Vary both level and change across countries/years
+            await insert_point(db_conn, sid_dep, str(yr), 50.0 + i * 2.0 - (yr - 2000) * (0.5 + i * 0.1))
             sid_gdp = await insert_series(db_conn, "NY.GDP.PCAP.KD.ZG", iso)
-            await insert_point(db_conn, sid_gdp, str(yr), 4.0)
+            await insert_point(db_conn, sid_gdp, str(yr), 2.0 + i * 0.3)
 
     result = await DemographicDividend().compute(db_conn)
     assert 0 <= result["score"] <= 100
@@ -39,9 +39,9 @@ async def test_first_dividend_key(db_conn):
         iso = f"DE{i:02d}"
         for yr in range(2000, 2008):
             sid_dep = await insert_series(db_conn, "SP.POP.DPND", iso)
-            await insert_point(db_conn, sid_dep, str(yr), 60.0 - yr * 0.3)
+            await insert_point(db_conn, sid_dep, str(yr), 55.0 + i * 1.5 - (yr - 2000) * (0.3 + i * 0.05))
             sid_gdp = await insert_series(db_conn, "NY.GDP.PCAP.KD.ZG", iso)
-            await insert_point(db_conn, sid_gdp, str(yr), 3.5)
+            await insert_point(db_conn, sid_gdp, str(yr), 1.5 + i * 0.4)
 
     result = await DemographicDividend().compute(db_conn)
     assert "results" in result
