@@ -4,38 +4,43 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_wages_returns_501(async_client):
-    """Wage analysis endpoint returns 501."""
+async def test_wages_returns_json(async_client):
+    """Wage analysis endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/labor/wages")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_education_returns_501(async_client):
-    """Returns to education endpoint returns 501."""
+async def test_education_returns_json(async_client):
+    """Returns to education endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/labor/education")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_tightness_returns_501(async_client):
-    """Labor market tightness endpoint returns 501."""
+async def test_tightness_returns_json(async_client):
+    """Labor market tightness endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/labor/tightness")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_beveridge_returns_501(async_client):
-    """Beveridge curve endpoint returns 501."""
+async def test_beveridge_returns_json(async_client):
+    """Beveridge curve endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/labor/beveridge")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_labor_score_returns_501(async_client):
-    """Labor composite score endpoint returns 501."""
+async def test_labor_score_returns_json(async_client):
+    """Labor composite score endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/labor/score")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio

@@ -11,52 +11,61 @@ async def test_gravity_missing_params(async_client):
 
 
 @pytest.mark.asyncio
-async def test_gravity_returns_501(async_client):
-    """Gravity endpoint returns 501 (not implemented) when called with valid params."""
+async def test_gravity_returns_json(async_client):
+    """Gravity endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/gravity?reporter=USA&year=2022")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    data = resp.json()
+    assert isinstance(data, dict)
 
 
 @pytest.mark.asyncio
-async def test_rca_returns_501(async_client):
-    """RCA endpoint returns 501."""
+async def test_rca_returns_json(async_client):
+    """RCA endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/rca/USA")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_concentration_returns_501(async_client):
-    """Concentration endpoint returns 501."""
+async def test_concentration_returns_json(async_client):
+    """Concentration endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/concentration/DEU")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_openness_returns_501(async_client):
-    """Trade openness endpoint returns 501."""
+async def test_openness_returns_json(async_client):
+    """Trade openness endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/openness/JPN")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_bilateral_returns_501(async_client):
-    """Bilateral decomposition endpoint returns 501."""
+async def test_bilateral_returns_json(async_client):
+    """Bilateral decomposition endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/bilateral/USA/CHN")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_terms_of_trade_returns_501(async_client):
-    """Terms of trade endpoint returns 501."""
+async def test_terms_of_trade_returns_json(async_client):
+    """Terms of trade endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/terms-of-trade/GBR")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_trade_score_returns_501(async_client):
-    """Trade composite score endpoint returns 501."""
+async def test_trade_score_returns_json(async_client):
+    """Trade composite score endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/trade/score")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "layer" in data or "score" in data
 
 
 @pytest.mark.asyncio
