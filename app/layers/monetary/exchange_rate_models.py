@@ -89,7 +89,6 @@ class ExchangeRateModels(LayerBase):
         }
 
         ln_ex = np.log(np.maximum(ex, 1e-10))
-        t = np.arange(len(ex), dtype=float)
 
         # --- 1. Mundell-Fleming IS-LM-BP ---
         if data.get("domestic_rate") and data.get("foreign_rate"):
