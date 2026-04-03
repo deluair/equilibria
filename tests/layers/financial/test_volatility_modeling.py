@@ -31,9 +31,9 @@ async def test_compute_with_sufficient_data_returns_score(db_conn):
     """100 daily returns exceed the 60-row minimum."""
     rng = np.random.default_rng(40)
     returns = rng.normal(0.0, 0.015, 100)
-    dates = [f"2022-{(i // 28 + 1):02d}-{(i % 28 + 1):02d}" for i in range(100)]
+    dates = [f"2024-{(i // 28 + 1):02d}-{(i % 28 + 1):02d}" for i in range(100)]
     sid = await _insert_series(db_conn, "yahoo", "vol_idx", "USA",
-                                "market_index asset_returns daily")
+                                "vol_idx asset_returns daily")
     await _insert_points(db_conn, sid, list(zip(dates, returns.tolist())))
 
     result = await VolatilityModeling().compute(db_conn, country_iso3="USA",
