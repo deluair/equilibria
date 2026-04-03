@@ -157,6 +157,9 @@ class DBPool:
 
 
 _pool: DBPool | None = None
+_db: None = None
+_pool_queue: None = None
+_pool_conns: list = []
 
 
 async def get_db() -> DBConnection:
