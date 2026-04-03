@@ -1,11 +1,15 @@
 from app.layers.methods.bayesian_methods import BayesianMethods
 from app.layers.methods.bunching import BunchingEstimation
+from app.layers.methods.meta_analysis import MetaAnalysis
 from app.layers.methods.mixture_models import MixtureModels
+from app.layers.methods.panel_cointegration import PanelCointegration
 from app.layers.methods.quantile_regression import QuantileRegression
 from app.layers.methods.regression_kink import RegressionKinkDesign
 from app.layers.methods.spatial_econometrics import SpatialEconometrics
+from app.layers.methods.stochastic_frontier import StochasticFrontier
 from app.layers.methods.survival_analysis import SurvivalAnalysis
 from app.layers.methods.synthetic_control import SyntheticControl
+from app.layers.methods.threshold_regression import ThresholdRegression
 
 ALL_MODULES = [
     SyntheticControl,
@@ -16,6 +20,10 @@ ALL_MODULES = [
     MixtureModels,
     SurvivalAnalysis,
     BayesianMethods,
+    PanelCointegration,
+    ThresholdRegression,
+    StochasticFrontier,
+    MetaAnalysis,
 ]
 
 __all__ = [
@@ -27,5 +35,9 @@ __all__ = [
     "MixtureModels",
     "SurvivalAnalysis",
     "BayesianMethods",
+    "PanelCointegration",
+    "ThresholdRegression",
+    "StochasticFrontier",
+    "MetaAnalysis",
     "ALL_MODULES",
 ]
