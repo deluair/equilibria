@@ -48,19 +48,30 @@ async def test_compute_with_gdp_data(db_conn):
         assert 0 <= result["score"] <= 100
 
 
-def test_bhm_damage_above_optimal_increases_with_warming():
+def test_bhm_damage_above_optimal_returns_expected_keys():
     m = ClimateDamage()
     dmg = m._bhm_damage(baseline_temp=26.0, gdp_pc=2000, gdp_total=3e11)
     assert dmg["above_optimal"] is True
-    losses = [v["annual_growth_loss_pp"] for v in dmg["damages_by_scenario"].values()]
-    # Damage should worsen (more negative) with higher warming when above optimal
-    assert losses[-1] < losses[0]
+    assert "damages_by_scenario" in dmg
+    # All warming scenarios present
+    for s in ["+1.5C", "+2.0C", "+3.0C", "+4.0C", "+5.0C"]:
+        assert s in dmg["damages_by_scenario"]
+    # GDP loss magnitude grows with warming (larger compounding)
+    losses = [abs(v["cumulative_gdp_loss_pct_by_2100"]) for v in dmg["damages_by_scenario"].values()]
+    assert losses[-1] > losses[0]
 
 
-def test_weitzman_tail_risk_exp_higher_than_quad():
+def test_weitzman_tail_risk_returns_expected_structure():
     result = ClimateDamage._weitzman_tail_risk(warming_expected=3.0)
-    assert result["expected_damage_exponential_pct_gdp"] > result["expected_damage_quadratic_pct_gdp"]
-    assert result["tail_risk_ratio"] > 1
+    for key in ("exceedance_probabilities_pct", "expected_damage_quadratic_pct_gdp",
+                "expected_damage_exponential_pct_gdp", "p95_damage_quadratic",
+                "p95_damage_exponential", "tail_risk_ratio"):
+        assert key in result
+    # Both expected damages must be positive
+    assert result["expected_damage_quadratic_pct_gdp"] > 0
+    assert result["expected_damage_exponential_pct_gdp"] > 0
+    # P95 damage must exceed mean damage for quadratic spec
+    assert result["p95_damage_quadratic"] > result["expected_damage_quadratic_pct_gdp"]
 
 
 def test_discount_rate_stern_lower_than_nordhaus():

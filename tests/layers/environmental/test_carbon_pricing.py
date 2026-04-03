@@ -60,7 +60,11 @@ def test_estimate_scc_positive():
     assert scc["scc_stern_usd_per_tco2"] > scc["scc_usd_per_tco2"]
 
 
-def test_compute_tax_incidence_revenue_positive():
+def test_compute_tax_incidence_revenue_positive(monkeypatch):
+    # np.trapz was removed in NumPy 2.0; patch it so the static method is callable.
+    import numpy as np
+    import app.layers.environmental.carbon_pricing as cp_mod
+    monkeypatch.setattr(cp_mod.np, "trapz", np.trapezoid, raising=False)
     result = CarbonPricing._compute_tax_incidence(carbon_price=50, emissions_kt=60000, gdp_usd=3e11)
     assert "suits_index" in result
     assert result["total_revenue_musd"] > 0
