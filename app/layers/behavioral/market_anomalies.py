@@ -295,9 +295,9 @@ class MarketAnomalies(LayerBase):
             autocorrelations[f"{lag}_p"] = round(p_val, 6)
 
         # Momentum: positive autocorrelation at short horizons (1-12 months)
-        short_lags = [l for l in [1, 3, 6, 12] if l in autocorrelations]
+        short_lags = [lag for lag in [1, 3, 6, 12] if lag in autocorrelations]
         if short_lags:
-            mom_lag = max(short_lags, key=lambda l: autocorrelations.get(l, 0))
+            mom_lag = max(short_lags, key=lambda lag: autocorrelations.get(lag, 0))
             mom_corr = autocorrelations.get(mom_lag, 0)
             mom_p = autocorrelations.get(f"{mom_lag}_p", 1)
             result["momentum_autocorr"] = round(mom_corr, 4)
@@ -306,9 +306,9 @@ class MarketAnomalies(LayerBase):
             result["momentum_significant"] = mom_p < 0.05 and mom_corr > 0
 
         # Reversal: negative autocorrelation at long horizons (24-36 months)
-        long_lags = [l for l in [24, 36] if l in autocorrelations]
+        long_lags = [lag for lag in [24, 36] if lag in autocorrelations]
         if long_lags:
-            rev_lag = min(long_lags, key=lambda l: autocorrelations.get(l, 0))
+            rev_lag = min(long_lags, key=lambda lag: autocorrelations.get(lag, 0))
             rev_corr = autocorrelations.get(rev_lag, 0)
             rev_p = autocorrelations.get(f"{rev_lag}_p", 1)
             result["reversal_autocorr"] = round(rev_corr, 4)

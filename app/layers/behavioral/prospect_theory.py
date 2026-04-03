@@ -182,9 +182,6 @@ class ProspectTheory(LayerBase):
         and the parametric value function, using the empirical CDF
         as a proxy for revealed preferences.
         """
-        gains = changes[changes > 0]
-        losses = changes[changes < 0]
-
         # Normalize to [0, 1] range for numerical stability
         max_abs = max(np.max(np.abs(changes)), 1e-10)
         normed = changes / max_abs

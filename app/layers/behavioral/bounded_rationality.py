@@ -32,7 +32,6 @@ Sources: WDI, FRED (market data, policy response times, complexity measures)
 from __future__ import annotations
 
 import numpy as np
-from scipy import stats as sp_stats
 
 from app.layers.base import LayerBase
 
@@ -225,10 +224,6 @@ class BoundedRationality(LayerBase):
         changes = np.diff(values)
         abs_changes = np.abs(changes)
         median_change = float(np.median(abs_changes))
-
-        # Classify shocks as large (above median) or small (below)
-        large_idx = abs_changes >= median_change
-        small_idx = ~large_idx
 
         # Response: next-period adjustment magnitude
         if len(changes) < 2:

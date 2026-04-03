@@ -31,7 +31,6 @@ Sources: WDI (Gini, income shares, trade balances), FRED
 from __future__ import annotations
 
 import numpy as np
-from scipy.optimize import minimize
 
 from app.layers.base import LayerBase
 

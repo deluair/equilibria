@@ -32,7 +32,7 @@ Sources: FRED (savings rate, consumption, interest rates), WDI
 from __future__ import annotations
 
 import numpy as np
-from scipy.optimize import minimize_scalar, minimize
+from scipy.optimize import minimize, minimize_scalar
 
 from app.layers.base import LayerBase
 
@@ -287,7 +287,6 @@ class TimePreference(LayerBase):
         Compares optimal savings (exponential discounter with delta only)
         vs actual savings under quasi-hyperbolic preferences.
         """
-        mean_savings_rate = float(np.mean(savings)) / 100  # to decimal
         current_savings_rate = float(savings[-1]) / 100
 
         # Optimal savings rate under exponential discounting (delta only)
