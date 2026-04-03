@@ -1,6 +1,6 @@
 # Equilibria
 
-Open-source applied economics analysis platform. 6 analytical layers, 103 modules, 12 estimators, AI-powered briefings. Apache 2.0.
+Open-source applied economics analysis platform. 6 analytical layers, 109 modules, 12 estimators, AI-powered briefings. Apache 2.0.
 
 ## Stack
 - Backend: FastAPI + aiosqlite + Python 3.11, uv
@@ -41,7 +41,7 @@ app/
     chat.py            # AI chat endpoint
   layers/
     base.py            # LayerBase ABC (compute, run, classify_signal)
-    trade/             # 22 modules
+    trade/             # 28 modules
     macro/             # 20 modules
     labor/             # 16 modules
     development/       # 16 modules
@@ -76,11 +76,12 @@ deploy.sh
 
 ## 6 Analytical Layers (103 modules)
 
-### L1 Trade (22 modules)
+### L1 Trade (28 modules)
 gravity, trade_elasticity, rca, terms_of_trade, trade_openness, concentration,
 bilateral_decomposition, complementarity, grubel_lloyd, cbam_impact, tariff_passthrough,
 product_space, trade_creation, export_survival, gvc_participation, market_diversification,
-rta_evaluation, sanctions_impact, border_effect, trade_weighted_fx, currency_union, trade_cost
+rta_evaluation, sanctions_impact, border_effect, trade_weighted_fx, currency_union, trade_cost,
+trade_in_services, digital_trade, wto_disputes, trade_finance, rules_of_origin, ntm_analysis
 
 ### L2 Macro (20 modules)
 gdp_decomposition, phillips_curve, taylor_rule, yield_curve, output_gap, okuns_law,
