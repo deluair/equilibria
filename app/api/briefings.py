@@ -7,8 +7,12 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel
 
+from app.briefings.agricultural_outlook import AgriculturalOutlookBriefing
 from app.briefings.country_deep_dive import CountryDeepDiveBriefing
+from app.briefings.development_tracker import DevelopmentTrackerBriefing
 from app.briefings.economic_conditions import EconomicConditionsBriefing
+from app.briefings.labor_pulse import LaborPulseBriefing
+from app.briefings.policy_alert import PolicyAlertBriefing
 from app.briefings.trade_flash import TradeFlashBriefing
 from app.db import get_db, release_db
 
@@ -20,6 +24,10 @@ GENERATORS = {
     "economic_conditions": EconomicConditionsBriefing,
     "trade_flash": TradeFlashBriefing,
     "country_deep_dive": CountryDeepDiveBriefing,
+    "labor_pulse": LaborPulseBriefing,
+    "development_tracker": DevelopmentTrackerBriefing,
+    "agricultural_outlook": AgriculturalOutlookBriefing,
+    "policy_alert": PolicyAlertBriefing,
 }
 
 
@@ -80,7 +88,7 @@ async def get_briefing(
 async def generate_briefing(
     request: BriefingGenerateRequest,
 ) -> dict[str, Any]:
-    """Generate a briefing by type (economic_conditions, trade_flash, country_deep_dive)."""
+    """Generate a briefing by type (economic_conditions, trade_flash, country_deep_dive, labor_pulse, development_tracker, agricultural_outlook, policy_alert)."""
     generator_cls = GENERATORS.get(request.type)
     if generator_cls is None:
         raise HTTPException(
