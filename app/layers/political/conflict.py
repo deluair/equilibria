@@ -38,7 +38,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import stats
 
 from app.layers.base import LayerBase
 
@@ -108,9 +107,7 @@ class ConflictEconomics(LayerBase):
             return {"score": None, "signal": "UNAVAILABLE", "error": "no conflict/risk factor data"}
 
         # --- Parse conflict indicators ---
-        conflict_score_raw = None
         political_stability = None
-        latest_battle_deaths = None
 
         if conflict_rows:
             for r in conflict_rows:
@@ -118,12 +115,8 @@ class ConflictEconomics(LayerBase):
                 val = float(r["value"]) if r["value"] is not None else None
                 if val is None:
                     continue
-                if "peace" in name and "index" in name:
-                    conflict_score_raw = val
-                elif "political" in name and "stability" in name:
+                if "political" in name and "stability" in name:
                     political_stability = val
-                elif "battle" in name and "death" in name:
-                    latest_battle_deaths = val
 
         # --- Collier-Hoeffler risk factors ---
         risk_factors = {}

@@ -123,7 +123,6 @@ class NutritionEconomics(LayerBase):
         waste_data = _index(waste_rows) if waste_rows else {}
         uw_data = _index(uw_rows) if uw_rows else {}
         gdppc_data = _index(gdppc_rows) if gdppc_rows else {}
-        food_cpi_data = _index(food_cpi_rows) if food_cpi_rows else {}
         anemia_data = _index(anemia_rows) if anemia_rows else {}
 
         # --- Income-nutrition elasticity ---
@@ -235,8 +234,6 @@ class NutritionEconomics(LayerBase):
         if country_iso3 and country_iso3 in gdppc_data:
             gdp_years = gdppc_data[country_iso3]
             latest_yr = sorted(gdp_years.keys())[-1]
-            gdppc_val = gdp_years[latest_yr]
-
             costs = {}
 
             # Stunting productivity loss

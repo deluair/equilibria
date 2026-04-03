@@ -236,9 +236,6 @@ class EfficientFrontier(LayerBase):
         M = np.linalg.inv(tau_cov_inv + P.T @ Omega_inv @ P)
         bl_mu = M @ (tau_cov_inv @ pi + P.T @ Omega_inv @ Q)
 
-        # BL posterior covariance
-        bl_cov = cov + M
-
         return {
             "equilibrium_returns": [round(float(p), 6) for p in pi],
             "posterior_returns": [round(float(b), 6) for b in bl_mu],

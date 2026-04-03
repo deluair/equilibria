@@ -124,8 +124,6 @@ class CorruptionEconomics(LayerBase):
         # Parse corruption series
         corruption_dates = [r["date"] for r in corruption_rows]
         corruption_vals = np.array([float(r["value"]) for r in corruption_rows])
-        corruption_years = np.array([int(str(d)[:4]) for d in corruption_dates])
-
         latest_corruption = float(corruption_vals[-1])
         mean_corruption = float(np.mean(corruption_vals))
 

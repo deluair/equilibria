@@ -33,7 +33,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 
@@ -150,7 +149,10 @@ class LobbyingEconomics(LayerBase):
                 r_squared = 1.0 - np.sum(resid ** 2) / np.sum((lhs - np.mean(lhs)) ** 2) if np.var(lhs) > 0 else 0.0
 
                 # Organized industry tariff premium
-                org_premium = float(np.mean(tariffs_arr[org == 1]) - np.mean(tariffs_arr[org == 0])) if org.sum() > 0 and org.sum() < len(org) else 0.0
+                if org.sum() > 0 and org.sum() < len(org):
+                    org_premium = float(np.mean(tariffs_arr[org == 1]) - np.mean(tariffs_arr[org == 0]))
+                else:
+                    org_premium = 0.0
 
                 gh_result = {
                     "welfare_weight_a": round(welfare_weight, 2) if welfare_weight else None,

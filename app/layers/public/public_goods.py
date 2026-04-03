@@ -158,11 +158,7 @@ class PublicGoods(LayerBase):
             if gov_exp_pct is not None:
                 # Deviation from median (proxy for optimal under Samuelson)
                 deviation = gov_exp_pct - median_share
-                percentile_rank = float(
-                    np.searchsorted(np.sort(all_shares), gov_exp_pct)
-                    / len(all_shares)
-                    * 100
-                )
+                percentile_rank = float(np.searchsorted(np.sort(all_shares), gov_exp_pct) / len(all_shares) * 100)
                 samuelson = {
                     "gov_expenditure_pct_gdp": round(gov_exp_pct, 2),
                     "cross_country_median": round(median_share, 2),
@@ -170,13 +166,7 @@ class PublicGoods(LayerBase):
                     "cross_country_p75": round(p75, 2),
                     "deviation_from_median": round(deviation, 2),
                     "percentile_rank": round(percentile_rank, 1),
-                    "assessment": (
-                        "under-provision"
-                        if gov_exp_pct < p25
-                        else "over-provision"
-                        if gov_exp_pct > p75
-                        else "adequate"
-                    ),
+                    "assessment": ("under-provision" if gov_exp_pct < p25 else "over-provision" if gov_exp_pct > p75 else "adequate"),
                     "n_countries": len(cross_country),
                 }
             else:
@@ -263,9 +253,7 @@ class PublicGoods(LayerBase):
                 "consumption_growth": round(avg_growth, 4),
             },
             "market_rate": round(market_rate, 4) if market_rate else None,
-            "sdr_vs_market": (
-                round(sdr - market_rate, 4) if market_rate else None
-            ),
+            "sdr_vs_market": (round(sdr - market_rate, 4) if market_rate else None),
         }
 
         # Example BCA: evaluate a hypothetical project with given parameters

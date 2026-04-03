@@ -266,7 +266,6 @@ class TermStructure(LayerBase):
         dr = np.diff(rates_pos)
         r_lag = rates_pos[:-1]
         sqrt_r = np.sqrt(r_lag)
-        n = len(dr)
 
         # Transformed regression
         y = dr / sqrt_r

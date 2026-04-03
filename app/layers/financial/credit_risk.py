@@ -50,7 +50,6 @@ class CreditRisk(LayerBase):
         # Try to extract key variables
         equity_values = self._find_series(series, ["equity", "market_cap", "stock_price"])
         debt_values = self._find_series(series, ["debt", "liabilities", "face_value"])
-        equity_vol = self._find_series(series, ["equity_vol", "stock_vol", "volatility"])
         risk_free = self._find_series(series, ["risk_free", "rf", "tbill"])
 
         # Merton model
@@ -163,7 +162,6 @@ class CreditRisk(LayerBase):
 
             # Update V from E = V*N(d1) - D*exp(-rT)*N(d2)
             nd1 = sp_stats.norm.cdf(d1)
-            nd2 = sp_stats.norm.cdf(d2)
 
             try:
                 def f(v):

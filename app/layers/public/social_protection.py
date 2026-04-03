@@ -37,8 +37,6 @@ Sources: WDI (poverty, social protection), ILO (social spending)
 
 from __future__ import annotations
 
-import numpy as np
-
 from app.layers.base import LayerBase
 
 
@@ -148,9 +146,7 @@ class SocialProtection(LayerBase):
                 "inclusion_error": round(inclusion_error, 4),
                 "targeting_differential": round(targeting_diff, 4),
                 "quality": (
-                    "well-targeted" if targeting_diff > 0.3
-                    else "moderately-targeted" if targeting_diff > 0.1
-                    else "poorly-targeted"
+                    "well-targeted" if targeting_diff > 0.3 else "moderately-targeted" if targeting_diff > 0.1 else "poorly-targeted"
                 ),
             }
         else:
@@ -168,11 +164,7 @@ class SocialProtection(LayerBase):
                 "daily_equivalent": round(daily_transfer, 2),
                 "poverty_line_daily": poverty_line,
                 "adequacy_ratio": round(adequacy_ratio, 4),
-                "assessment": (
-                    "adequate" if adequacy_ratio >= 0.75
-                    else "moderate" if adequacy_ratio >= 0.4
-                    else "inadequate"
-                ),
+                "assessment": ("adequate" if adequacy_ratio >= 0.75 else "moderate" if adequacy_ratio >= 0.4 else "inadequate"),
             }
         else:
             results["adequacy"] = {"error": "no transfer amount data"}
@@ -214,11 +206,8 @@ class SocialProtection(LayerBase):
                 "existing_social_spending_pct": round(existing_pct, 2),
                 "tax_clawback_pct": round(clawback_pct, 2),
                 "net_additional_pct_gdp": round(net_pct_gdp, 2),
-                "feasibility": (
-                    "feasible" if net_pct_gdp < 3
-                    else "challenging" if net_pct_gdp < 8
-                    else "very costly"
-                ),
+                "poverty_rate": round(poverty_rate, 4) if poverty_rate else None,
+                "feasibility": ("feasible" if net_pct_gdp < 3 else "challenging" if net_pct_gdp < 8 else "very costly"),
             }
         else:
             results["ubi_cost"] = {"error": "missing population, GDP, or UBI amount"}

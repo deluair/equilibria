@@ -14,8 +14,6 @@ from __future__ import annotations
 
 import numpy as np
 from scipy import stats as sp_stats
-from scipy.optimize import minimize_scalar
-
 from app.layers.base import LayerBase
 
 
@@ -49,7 +47,6 @@ class ValueAtRisk(LayerBase):
             return {"score": None, "signal": "UNAVAILABLE", "error": "insufficient return data"}
 
         returns = np.array([float(r["value"]) for r in rows])
-        dates = [r["date"] for r in rows]
         n = len(returns)
 
         alpha = 1.0 - confidence
@@ -186,9 +183,6 @@ class ValueAtRisk(LayerBase):
     def _parametric_var_t(returns: np.ndarray, alpha: float,
                           horizon: int) -> tuple[float, float, float]:
         """Parametric VaR with Student-t distribution (fatter tails)."""
-        mu = float(np.mean(returns))
-        sigma = float(np.std(returns, ddof=1))
-
         # Fit Student-t
         df, loc, scale = sp_stats.t.fit(returns)
         df = max(df, 2.01)  # Ensure variance exists

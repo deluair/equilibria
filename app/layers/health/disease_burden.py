@@ -20,7 +20,6 @@ Key references:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize as sp_optimize
 
 from app.layers.base import LayerBase
 

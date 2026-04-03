@@ -123,20 +123,16 @@ class EducationEconomics(LayerBase):
         production = {}
         # Need at least spending + PTR + outcome for estimation
         usable = {
-            iso: d for iso, d in country_data.items()
-            if "SE.XPD.TOTL.GD.ZS" in d
-            and "SE.PRM.ENRL.TC.ZS" in d
-            and ("SE.SEC.CMPT.LO.ZS" in d or "SE.ADT.LITR.ZS" in d)
+            iso: d
+            for iso, d in country_data.items()
+            if "SE.XPD.TOTL.GD.ZS" in d and "SE.PRM.ENRL.TC.ZS" in d and ("SE.SEC.CMPT.LO.ZS" in d or "SE.ADT.LITR.ZS" in d)
         }
 
         if len(usable) >= 20:
             isos = sorted(usable.keys())
             X_spend = np.array([usable[c]["SE.XPD.TOTL.GD.ZS"] for c in isos])
             X_ptr = np.array([usable[c]["SE.PRM.ENRL.TC.ZS"] for c in isos])
-            Y = np.array([
-                usable[c].get("SE.SEC.CMPT.LO.ZS", usable[c].get("SE.ADT.LITR.ZS", 50))
-                for c in isos
-            ])
+            Y = np.array([usable[c].get("SE.SEC.CMPT.LO.ZS", usable[c].get("SE.ADT.LITR.ZS", 50)) for c in isos])
 
             # OLS: outcome = b0 + b1*spending + b2*(1/PTR) + e
             n = len(isos)
@@ -144,7 +140,7 @@ class EducationEconomics(LayerBase):
             X = np.column_stack([np.ones(n), X_spend, inv_ptr])
             beta = np.linalg.lstsq(X, Y, rcond=None)[0]
             resid = Y - X @ beta
-            ss_res = float(np.sum(resid ** 2))
+            ss_res = float(np.sum(resid**2))
             ss_tot = float(np.sum((Y - np.mean(Y)) ** 2))
             r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0
 
@@ -158,17 +154,15 @@ class EducationEconomics(LayerBase):
                 "r_squared": round(r2, 4),
                 "interpretation": {
                     "spending_effect": f"{beta[1]:.2f} pp completion per 1pp GDP spending",
-                    "class_size_effect": f"smaller classes improve outcomes" if beta[2] > 0 else "ambiguous",
+                    "class_size_effect": "smaller classes improve outcomes" if beta[2] > 0 else "ambiguous",
                 },
             }
 
             # Country-specific prediction and residual
             if country in usable:
-                x_c = np.array([1.0, usable[country]["SE.XPD.TOTL.GD.ZS"],
-                               1.0 / max(usable[country]["SE.PRM.ENRL.TC.ZS"], 1)])
+                x_c = np.array([1.0, usable[country]["SE.XPD.TOTL.GD.ZS"], 1.0 / max(usable[country]["SE.PRM.ENRL.TC.ZS"], 1)])
                 predicted = float(x_c @ beta)
-                actual = usable[country].get("SE.SEC.CMPT.LO.ZS",
-                                              usable[country].get("SE.ADT.LITR.ZS", 50))
+                actual = usable[country].get("SE.SEC.CMPT.LO.ZS", usable[country].get("SE.ADT.LITR.ZS", 50))
                 production["country_analysis"] = {
                     "predicted_outcome": round(predicted, 2),
                     "actual_outcome": round(actual, 2),
@@ -219,17 +213,11 @@ class EducationEconomics(LayerBase):
                 X_fs = np.column_stack([np.ones(len(enr_arr)), predicted_sizes])
                 a = np.linalg.lstsq(X_fs, act_arr, rcond=None)[0]
                 fitted_sizes = X_fs @ a
-                fs_r2 = 1.0 - np.sum((act_arr - fitted_sizes) ** 2) / np.sum(
-                    (act_arr - np.mean(act_arr)) ** 2
-                )
+                fs_r2 = 1.0 - np.sum((act_arr - fitted_sizes) ** 2) / np.sum((act_arr - np.mean(act_arr)) ** 2)
 
                 # Second stage: score = b0 + b1*fitted_size + e
                 X_ss = np.column_stack([np.ones(len(fitted_sizes)), fitted_sizes])
                 b = np.linalg.lstsq(X_ss, sc_arr, rcond=None)[0]
-                ss_r2 = 1.0 - np.sum((sc_arr - X_ss @ b) ** 2) / np.sum(
-                    (sc_arr - np.mean(sc_arr)) ** 2
-                )
-
                 # OLS for comparison (biased)
                 X_ols = np.column_stack([np.ones(len(act_arr)), act_arr])
                 b_ols = np.linalg.lstsq(X_ols, sc_arr, rcond=None)[0]
@@ -294,11 +282,9 @@ class EducationEconomics(LayerBase):
                 results["teacher_value_added"] = {
                     "n_countries": len(common_iso),
                     "slope": round(float(slope), 4),
-                    "r_squared": round(float(r_value ** 2), 4),
+                    "r_squared": round(float(r_value**2), 4),
                     "p_value": round(float(p_value), 4),
-                    "interpretation": (
-                        f"1pp increase in qualified teachers -> {slope:.2f}pp completion"
-                    ),
+                    "interpretation": (f"1pp increase in qualified teachers -> {slope:.2f}pp completion"),
                     "country_teacher_quality": round(tq_latest[country], 1) if country in tq_latest else None,
                 }
             else:
@@ -336,7 +322,7 @@ class EducationEconomics(LayerBase):
                 results["school_choice"] = {
                     "n_countries": len(common_iso2),
                     "private_share_effect": round(float(slope2), 4),
-                    "r_squared": round(float(r_val2 ** 2), 4),
+                    "r_squared": round(float(r_val2**2), 4),
                     "p_value": round(float(p_val2), 4),
                     "country_private_share": round(priv_latest[country], 1) if country in priv_latest else None,
                     "competition_matters": slope2 > 0 and p_val2 < 0.1,

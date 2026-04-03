@@ -39,7 +39,6 @@ Sources: EIA, FERC, ISO market data
 """
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 

@@ -45,7 +45,6 @@ class VolatilityModeling(LayerBase):
             return {"score": None, "signal": "UNAVAILABLE", "error": "insufficient return data"}
 
         returns = np.array([float(r["value"]) for r in rows])
-        dates = [r["date"] for r in rows]
         n = len(returns)
 
         # Demean returns

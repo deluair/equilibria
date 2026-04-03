@@ -179,7 +179,7 @@ class TaxIncidence(LayerBase):
 
         if income_rows and tax_share_rows and len(income_rows) >= 5:
             incomes = np.array([float(r["value"]) for r in income_rows])
-            taxes = np.array([float(r["value"]) for r in tax_share_rows[:len(incomes)]])
+            taxes = np.array([float(r["value"]) for r in tax_share_rows[: len(incomes)]])
 
             gini_income = _gini(incomes)
             ranks = np.arange(len(incomes))
@@ -226,7 +226,6 @@ class TaxIncidence(LayerBase):
         rates = np.linspace(0, 0.95, 50)
         revenues = [_laffer_revenue(t, 1.0, taxable_income_elasticity) for t in rates]
         peak_rev = max(revenues)
-        peak_rate = rates[np.argmax(revenues)]
 
         # Distance of current effective rate from peak
         current_rate = tax_gdp if tax_gdp and tax_gdp < 1 else corp_tax_rate

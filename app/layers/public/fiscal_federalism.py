@@ -146,10 +146,7 @@ class FiscalFederalism(LayerBase):
                     "equalization_coefficient": round(eq_coeff, 4),
                     "n_jurisdictions": len(pre_transfer),
                     "effectiveness": (
-                        "strong" if eq_coeff > 0.5
-                        else "moderate" if eq_coeff > 0.2
-                        else "weak" if eq_coeff > 0
-                        else "disequalizing"
+                        "strong" if eq_coeff > 0.5 else "moderate" if eq_coeff > 0.2 else "weak" if eq_coeff > 0 else "disequalizing"
                     ),
                 }
             else:
@@ -254,7 +251,7 @@ class FiscalFederalism(LayerBase):
                 results["oates_test"] = {
                     "n_countries": len(common_iso),
                     "slope": round(float(slope), 4),
-                    "r_squared": round(float(r_value ** 2), 4),
+                    "r_squared": round(float(r_value**2), 4),
                     "p_value": round(float(p_value), 4),
                     "interpretation": (
                         "decentralization associated with higher growth"

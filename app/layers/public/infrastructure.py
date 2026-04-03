@@ -41,7 +41,6 @@ Sources: WDI (infrastructure indicators), Penn World Table (capital stocks)
 from __future__ import annotations
 
 import numpy as np
-from scipy import stats as sp_stats
 
 from app.layers.base import LayerBase
 
@@ -58,7 +57,7 @@ def _bpr_travel_time(
     travel_time = free_flow * (1 + alpha * (volume/capacity)^beta)
     """
     ratio = volume / capacity if capacity > 0 else 0
-    return free_flow * (1.0 + alpha * ratio ** beta)
+    return free_flow * (1.0 + alpha * ratio**beta)
 
 
 def _marginal_congestion_cost(
@@ -145,11 +144,9 @@ class InfrastructureEconomics(LayerBase):
 
         aschauer = {}
         usable = {
-            iso: d for iso, d in cross_data.items()
-            if all(
-                s in d
-                for s in ["NY.GDP.MKTP.KD", "NE.GDI.FTOT.ZS", "GC.XPN.TOTL.GD.ZS", "SL.TLF.TOTL.IN"]
-            )
+            iso: d
+            for iso, d in cross_data.items()
+            if all(s in d for s in ["NY.GDP.MKTP.KD", "NE.GDI.FTOT.ZS", "GC.XPN.TOTL.GD.ZS", "SL.TLF.TOTL.IN"])
         }
 
         if len(usable) >= 20:
@@ -167,13 +164,13 @@ class InfrastructureEconomics(LayerBase):
             beta = np.linalg.lstsq(X, Y, rcond=None)[0]
 
             resid = Y - X @ beta
-            ss_res = float(np.sum(resid ** 2))
+            ss_res = float(np.sum(resid**2))
             ss_tot = float(np.sum((Y - np.mean(Y)) ** 2))
             r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0
 
             # HC1 standard errors
             XtX_inv = np.linalg.inv(X.T @ X)
-            omega = np.diag(resid ** 2) * (n / (n - 4))
+            omega = np.diag(resid**2) * (n / (n - 4))
             V = XtX_inv @ (X.T @ omega @ X) @ XtX_inv
             se = np.sqrt(np.maximum(np.diag(V), 0.0))
 
@@ -219,10 +216,7 @@ class InfrastructureEconomics(LayerBase):
 
         # Use electricity access as headline infrastructure indicator
         gap_result = {}
-        usable_gap = {
-            iso: d for iso, d in infra_data.items()
-            if "EG.ELC.ACCS.ZS" in d and "NY.GDP.PCAP.KD" in d
-        }
+        usable_gap = {iso: d for iso, d in infra_data.items() if "EG.ELC.ACCS.ZS" in d and "NY.GDP.PCAP.KD" in d}
 
         if len(usable_gap) >= 20:
             isos_g = sorted(usable_gap.keys())
@@ -230,14 +224,10 @@ class InfrastructureEconomics(LayerBase):
 
             y_infra = np.array([usable_gap[c]["EG.ELC.ACCS.ZS"] for c in isos_g])
             x_gdppc = np.log(np.array([usable_gap[c]["NY.GDP.PCAP.KD"] for c in isos_g]))
-            x_urban = np.array([
-                usable_gap[c].get("SP.URB.TOTL.IN.ZS", 50) for c in isos_g
-            ])
+            x_urban = np.array([usable_gap[c].get("SP.URB.TOTL.IN.ZS", 50) for c in isos_g])
 
             X_gap = np.column_stack([np.ones(n_g), x_gdppc, x_urban])
             b_gap = np.linalg.lstsq(X_gap, y_infra, rcond=None)[0]
-            resid_gap = y_infra - X_gap @ b_gap
-
             if country in usable_gap:
                 c_idx = isos_g.index(country)
                 predicted = float(X_gap[c_idx] @ b_gap)
@@ -279,18 +269,12 @@ class InfrastructureEconomics(LayerBase):
         if project_cost:
             # Public sector comparator
             annual_opex = project_cost * 0.04  # 4% of capex annually
-            pv_public = project_cost + sum(
-                annual_opex / (1 + public_discount) ** t
-                for t in range(1, project_years + 1)
-            )
+            pv_public = project_cost + sum(annual_opex / (1 + public_discount) ** t for t in range(1, project_years + 1))
 
             # PPP cost: higher financing cost, but efficiency + risk transfer
             ppp_capex = project_cost * (1 - efficiency_gain)
             ppp_annual = ppp_capex * 0.04 * (1 - efficiency_gain * 0.5)
-            pv_ppp_raw = ppp_capex + sum(
-                ppp_annual / (1 + private_discount) ** t
-                for t in range(1, project_years + 1)
-            )
+            pv_ppp_raw = ppp_capex + sum(ppp_annual / (1 + private_discount) ** t for t in range(1, project_years + 1))
             risk_value = project_cost * risk_transfer_value
             pv_ppp = pv_ppp_raw - risk_value
 
@@ -323,17 +307,12 @@ class InfrastructureEconomics(LayerBase):
         value_of_time = kwargs.get("value_of_time_per_hour", 25.0)
 
         current_time = _bpr_travel_time(current_volume, road_capacity, free_flow_time)
-        optimal_toll = _marginal_congestion_cost(
-            current_volume, road_capacity, free_flow_time, value_of_time / 60.0
-        )
+        optimal_toll = _marginal_congestion_cost(current_volume, road_capacity, free_flow_time, value_of_time / 60.0)
 
         # Volume-toll curve
         volumes = np.linspace(0.1 * road_capacity, 1.5 * road_capacity, 30)
         times = [_bpr_travel_time(v, road_capacity, free_flow_time) for v in volumes]
-        tolls = [
-            _marginal_congestion_cost(v, road_capacity, free_flow_time, value_of_time / 60.0)
-            for v in volumes
-        ]
+        tolls = [_marginal_congestion_cost(v, road_capacity, free_flow_time, value_of_time / 60.0) for v in volumes]
 
         delay_cost = (current_time - free_flow_time) * (value_of_time / 60.0) * current_volume
         vol_cap_ratio = current_volume / road_capacity
@@ -346,10 +325,7 @@ class InfrastructureEconomics(LayerBase):
             "optimal_toll": round(optimal_toll, 2),
             "total_delay_cost_per_hour": round(delay_cost, 0),
             "congestion_level": (
-                "severe" if vol_cap_ratio > 1.0
-                else "heavy" if vol_cap_ratio > 0.85
-                else "moderate" if vol_cap_ratio > 0.7
-                else "light"
+                "severe" if vol_cap_ratio > 1.0 else "heavy" if vol_cap_ratio > 0.85 else "moderate" if vol_cap_ratio > 0.7 else "light"
             ),
             "curve": {
                 "volumes": [round(float(v), 0) for v in volumes[::3]],

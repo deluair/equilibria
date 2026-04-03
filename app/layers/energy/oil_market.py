@@ -33,7 +33,6 @@ Sources: EIA, FRED, IMF commodity prices
 """
 
 import numpy as np
-from scipy import stats
 
 from app.layers.base import LayerBase
 
