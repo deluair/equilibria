@@ -36,7 +36,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import linalg as sp_linalg
 from scipy import stats
 from scipy.optimize import minimize
 
@@ -78,7 +77,6 @@ class DSGEEstimation(LayerBase):
             irf_horizon: int  - IRF horizon (default 20)
         """
         country = kwargs.get("country", "USA")
-        n_draws = int(kwargs.get("n_draws", 200))
         irf_horizon = int(kwargs.get("irf_horizon", 20))
 
         # Fetch observables
@@ -227,12 +225,9 @@ class DSGEEstimation(LayerBase):
         sigma_c = params.get("sigma_c", 1.5)
         h = params.get("h", 0.7)
         xi_p = params.get("xi_p", 0.66)
-        r_pi = params.get("r_pi", 1.5)
-        rho = params.get("rho", 0.75)
 
         # NK model-implied moments (simplified)
         kappa = (1 - xi_p) * (1 - 0.99 * xi_p) / xi_p * (1 / sigma_c)
-        phi_x = 0.13
 
         # Output gap autocorrelation implied by model
         implied_ac_y = float(np.clip(h / (1 + h), 0.3, 0.95))

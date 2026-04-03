@@ -152,7 +152,6 @@ class SouthSouthTrade(LayerBase):
                     time_series[date]["exp_south"] += val
 
         total_exports = exports_to_south + exports_to_north
-        total_imports = imports_from_south + imports_from_north
 
         ss_export_share = exports_to_south / total_exports if total_exports > 0 else 0.0
         north_dependency = exports_to_north / total_exports if total_exports > 0 else 1.0

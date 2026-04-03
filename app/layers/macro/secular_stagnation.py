@@ -172,7 +172,6 @@ class SecularStagnation(LayerBase):
         if "workingage_pop" in data and len(data["workingage_pop"]) >= 5:
             wap = data["workingage_pop"]
             latest_wap_growth = float(wap[-1])
-            mean_wap_growth = float(np.mean(wap))
             x_t = np.arange(len(wap), dtype=float)
             slope_wap, _, r_wap, p_wap, _ = stats.linregress(x_t, wap)
             demog["working_age_pop_growth_latest"] = round(latest_wap_growth, 4)

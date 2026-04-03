@@ -45,7 +45,6 @@ from __future__ import annotations
 
 import numpy as np
 from scipy import stats
-from scipy.optimize import minimize_scalar
 
 from app.layers.base import LayerBase
 

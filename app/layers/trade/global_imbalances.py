@@ -60,7 +60,6 @@ class GlobalImbalances(LayerBase):
             year    : int - reference year
         """
         country = kwargs.get("country", "USA")
-        year = kwargs.get("year")
 
         series_codes = {
             "current_account": f"CURR_ACCT_GDP_{country}",
@@ -187,7 +186,6 @@ class GlobalImbalances(LayerBase):
         # --- 4. Twin surpluses/deficits ---
         if "fiscal_balance" in data:
             fb = data["fiscal_balance"]
-            n_twin = min(len(ca), len(fb))
             ca_latest = float(ca[-1])
             fb_latest = float(fb[-1])
             twin_surplus = ca_latest > 0 and fb_latest > 0
