@@ -18,6 +18,12 @@ const navSections = [
       { name: "L3 Labor", href: "/labor", icon: "3" },
       { name: "L4 Development", href: "/development", icon: "4" },
       { name: "L5 Agricultural", href: "/agricultural", icon: "5" },
+      { name: "L7 Financial", href: "/financial", icon: "7" },
+      { name: "L8 Health", href: "/health", icon: "8" },
+      { name: "L9 Environmental", href: "/environmental", icon: "9" },
+      { name: "L10 Public", href: "/public", icon: "10" },
+      { name: "L11 Spatial", href: "/spatial", icon: "11" },
+      { name: "L12 Political", href: "/political", icon: "12" },
     ],
   },
   {
