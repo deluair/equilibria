@@ -68,7 +68,7 @@ async def test_compute_with_dependency_ratio_data(db_conn):
     assert 0 <= result["score"] <= 100
     dep = result["results"].get("dependency_ratio")
     if dep:
-        assert dep["aging_accelerating"] is True
+        assert dep["aging_accelerating"]  # True or np.True_
         assert "projected_10yr" in dep
 
 

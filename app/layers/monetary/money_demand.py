@@ -61,7 +61,7 @@ class MoneyDemand(LayerBase):
         for label, code in series_map.items():
             rows = await db.execute_fetchall(
                 "SELECT date, value FROM data_points WHERE series_id = "
-                "(SELECT id FROM data_series WHERE code = ?) "
+                "(SELECT id FROM data_series WHERE series_id = ?) "
                 "AND date >= date('now', ?) ORDER BY date",
                 (code, f"-{lookback} years"),
             )

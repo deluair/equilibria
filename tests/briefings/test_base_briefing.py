@@ -137,11 +137,12 @@ async def test_generate_title_contains_date(tmp_db):
 # ---------------------------------------------------------------------------
 
 def test_assemble_html_contains_briefing_type():
-    """assemble_html includes the briefing_type badge."""
+    """assemble_html includes the briefing_type text in the badge (underscores become spaces)."""
     b = _MinimalBriefing()
     b.sections = [{"heading": "A", "body": "<p>x</p>"}]
     html = b.assemble_html()
-    assert "test_briefing" in html.lower().replace("_", " ") or "test_briefing" in html
+    # The badge renders briefing_type.replace("_", " ") as visible text
+    assert "test briefing" in html
 
 
 def test_assemble_html_includes_section_heading():
