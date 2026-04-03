@@ -77,9 +77,6 @@ class MergerAnalysis(LayerBase):
             return {"score": None, "signal": "UNAVAILABLE", "error": "insufficient merger data"}
 
         shares = []
-        prices = []
-        marginal_costs = []
-        merging_pair = None
 
         for row in rows:
             meta = json.loads(row["metadata"]) if row.get("metadata") else {}

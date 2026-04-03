@@ -39,7 +39,6 @@ Score: high discrimination intensity -> STRESS (welfare loss), low -> STABLE.
 import json
 
 import numpy as np
-from scipy.optimize import minimize_scalar
 
 from app.layers.base import LayerBase
 
@@ -149,7 +148,6 @@ class PriceDiscrimination(LayerBase):
     def _identify_degrees(transactions: list[dict]) -> dict[str, float]:
         """Score likelihood of each price discrimination degree (0-1)."""
         prices = np.array([t["price"] for t in transactions])
-        n = len(transactions)
 
         # First degree: price closely tracks WTP
         first_score = 0.0
@@ -184,7 +182,6 @@ class PriceDiscrimination(LayerBase):
         if len(segments) >= 2:
             seg_means = [np.mean(v) for v in segments.values() if len(v) >= 2]
             if len(seg_means) >= 2:
-                overall_mean = np.mean(prices)
                 between_var = np.var(seg_means)
                 total_var = np.var(prices)
                 if total_var > 0:

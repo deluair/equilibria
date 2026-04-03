@@ -46,7 +46,6 @@ balanced platforms -> STABLE.
 import json
 
 import numpy as np
-from scipy.optimize import fsolve
 
 from app.layers.base import LayerBase
 

@@ -85,7 +85,6 @@ class AntitrustAnalysis(LayerBase):
         prices = []
         costs = []
         market_data = []
-        cartel_period = None
 
         for row in rows:
             meta = json.loads(row["metadata"]) if row.get("metadata") else {}
