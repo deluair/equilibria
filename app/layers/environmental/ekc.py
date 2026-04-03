@@ -31,7 +31,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 

@@ -384,10 +384,6 @@ class WaterEconomics(LayerBase):
             annual_return_pct = 0
 
         # Water use efficiency (output per m3)
-        ag_water_pct = self._latest_value(ag_water_ts) or 70
-        # Approximate water productivity
-        water_productivity = ag_va / (gdp * 0.001 * ag_water_pct / 100)  # USD per m3 proxy
-
         # Efficiency improvement potential
         current_efficiency = 0.40 if irrigated_pct < 30 else 0.55 if irrigated_pct < 60 else 0.70
         potential_efficiency = 0.80

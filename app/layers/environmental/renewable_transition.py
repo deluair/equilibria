@@ -33,7 +33,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 
@@ -192,13 +191,9 @@ class RenewableTransition(LayerBase):
                 capacity_factors = {"solar_pv": 0.18, "onshore_wind": 0.30, "offshore_wind": 0.40}
                 cf = capacity_factors.get(tech, 0.25)
                 lifetime = 25
-                capex_share = 0.80
-                opex_share = 0.20
             else:
                 cf = 0.85 if tech == "nuclear" else 0.60
                 lifetime = 40 if tech == "nuclear" else 30
-                capex_share = 0.50 if tech == "nuclear" else 0.30
-                opex_share = 0.50 if tech == "nuclear" else 0.70
 
             # Annuity factor
             annuity = (discount_rate * (1 + discount_rate) ** lifetime) / (
@@ -304,7 +299,7 @@ class RenewableTransition(LayerBase):
 
         return {
             "annual_co2_gt": round(co2_gt, 4),
-            "carbon_budget_gt": carbon_budget,
+            "carbon_budget_gt": carbon_budget_gtco2,
             "years_remaining_at_current_rate": round(years_remaining, 1),
             "fossil_electricity_share_pct": round(fossil_electricity_share, 2),
             "stranded_fraction": round(stranded_fraction, 4),

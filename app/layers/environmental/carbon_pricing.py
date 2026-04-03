@@ -29,7 +29,6 @@ References:
 from __future__ import annotations
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 
@@ -90,7 +89,6 @@ class CarbonPricing(LayerBase):
 
         co2_kt = series.get("EN.ATM.CO2E.KT", {})
         gdp = series.get("NY.GDP.MKTP.KD", {})
-        co2_pc = series.get("EN.ATM.CO2E.PC", {})
 
         common_years = sorted(set(co2_kt.keys()) & set(gdp.keys()))
         if len(common_years) < 5:

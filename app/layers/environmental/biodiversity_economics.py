@@ -323,7 +323,6 @@ class BiodiversityEconomics(LayerBase):
         Value of NK = discounted flow of ecosystem services.
         """
         latest_forest = self._latest_value(forest_km2_ts)
-        latest_land = self._latest_value(land_km2_ts)
         latest_gdp = self._latest_value(gdp_ts)
         latest_protected = self._latest_value(protected_ts)
 
