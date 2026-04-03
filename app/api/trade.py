@@ -4,7 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query, Response
+from fastapi import APIRouter, Query, Response
+
+from app.db import get_db, release_db
+from app.layers.trade.bilateral_decomposition import BilateralDecomposition
+from app.layers.trade.concentration import TradeConcentration
+from app.layers.trade.gravity import GravityModel
+from app.layers.trade.rca import RevealedComparativeAdvantage
+from app.layers.trade.terms_of_trade import TermsOfTrade
+from app.layers.trade.trade_openness import TradeOpenness
+from app.layers.trade import ALL_MODULES
 
 router = APIRouter(prefix="/trade", tags=["trade"])
 
@@ -19,9 +28,12 @@ async def gravity_estimation(
 ) -> dict[str, Any]:
     """Run gravity model estimation for a reporter-year pair."""
     response.headers["Cache-Control"] = CACHE_1H
-    reporter = reporter.upper()
-    # TODO: wire to app.layers.trade.gravity
-    raise HTTPException(status_code=501, detail="Gravity estimation not yet implemented")
+    db = await get_db()
+    try:
+        result = await GravityModel().run(db, country_iso3=reporter.upper(), year=year)
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/rca/{iso3}")
@@ -32,8 +44,12 @@ async def revealed_comparative_advantage(
 ) -> dict[str, Any]:
     """Compute Revealed Comparative Advantage for a country."""
     response.headers["Cache-Control"] = CACHE_1H
-    iso3 = iso3.upper()
-    raise HTTPException(status_code=501, detail="RCA computation not yet implemented")
+    db = await get_db()
+    try:
+        result = await RevealedComparativeAdvantage().run(db, country_iso3=iso3.upper(), year=year)
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/concentration/{iso3}")
@@ -43,8 +59,12 @@ async def hhi_concentration(
 ) -> dict[str, Any]:
     """Compute HHI export/import concentration for a country."""
     response.headers["Cache-Control"] = CACHE_1H
-    iso3 = iso3.upper()
-    raise HTTPException(status_code=501, detail="HHI concentration not yet implemented")
+    db = await get_db()
+    try:
+        result = await TradeConcentration().run(db, country_iso3=iso3.upper())
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/openness/{iso3}")
@@ -54,8 +74,12 @@ async def trade_openness(
 ) -> dict[str, Any]:
     """Compute trade openness metrics for a country."""
     response.headers["Cache-Control"] = CACHE_1H
-    iso3 = iso3.upper()
-    raise HTTPException(status_code=501, detail="Trade openness not yet implemented")
+    db = await get_db()
+    try:
+        result = await TradeOpenness().run(db, country_iso3=iso3.upper())
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/bilateral/{exporter}/{importer}")
@@ -66,9 +90,14 @@ async def bilateral_decomposition(
 ) -> dict[str, Any]:
     """Bilateral trade decomposition (extensive/intensive margins)."""
     response.headers["Cache-Control"] = CACHE_1H
-    exporter = exporter.upper()
-    importer = importer.upper()
-    raise HTTPException(status_code=501, detail="Bilateral decomposition not yet implemented")
+    db = await get_db()
+    try:
+        result = await BilateralDecomposition().run(
+            db, country_iso3=exporter.upper(), partner_iso3=importer.upper()
+        )
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/terms-of-trade/{iso3}")
@@ -78,8 +107,12 @@ async def terms_of_trade(
 ) -> dict[str, Any]:
     """Compute terms of trade for a country."""
     response.headers["Cache-Control"] = CACHE_1H
-    iso3 = iso3.upper()
-    raise HTTPException(status_code=501, detail="Terms of trade not yet implemented")
+    db = await get_db()
+    try:
+        result = await TermsOfTrade().run(db, country_iso3=iso3.upper())
+        return result
+    finally:
+        await release_db(db)
 
 
 @router.get("/score")
@@ -88,4 +121,23 @@ async def trade_composite_score(
 ) -> dict[str, Any]:
     """Layer 1 composite score across all trade indicators."""
     response.headers["Cache-Control"] = CACHE_1H
-    raise HTTPException(status_code=501, detail="Trade composite score not yet implemented")
+    db = await get_db()
+    try:
+        results = []
+        for ModuleClass in ALL_MODULES:
+            module = ModuleClass()
+            r = await module.run(db)
+            results.append(r)
+
+        scores = [r["score"] for r in results if r.get("score") is not None]
+        avg_score = round(sum(scores) / len(scores), 2) if scores else None
+
+        return {
+            "layer": "trade",
+            "score": avg_score,
+            "modules_run": len(results),
+            "modules_scored": len(scores),
+            "results": results,
+        }
+    finally:
+        await release_db(db)
