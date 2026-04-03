@@ -153,8 +153,10 @@ class PharmaceuticalEconomics(LayerBase):
                 "n_countries": len(iso_list),
                 "target_residual": target_residual,
                 "target_interpretation": (
-                    "above_predicted" if target_residual and target_residual > 0
-                    else "below_predicted" if target_residual and target_residual < 0
+                    "above_predicted"
+                    if target_residual and target_residual > 0
+                    else "below_predicted"
+                    if target_residual and target_residual < 0
                     else None
                 ),
                 "highest_price": [{"iso3": c, "residual": round(r, 3)} for c, r in ranked[:5]],
@@ -201,9 +203,7 @@ class PharmaceuticalEconomics(LayerBase):
                 "r_squared": float(r_sq),
                 "n_countries": len(patent_list),
                 "interpretation": (
-                    "More patents associated with higher spending"
-                    if beta_g[1] > 0
-                    else "Weak or negative patent-spending link"
+                    "More patents associated with higher spending" if beta_g[1] > 0 else "Weak or negative patent-spending link"
                 ),
             }
 
@@ -272,11 +272,7 @@ class PharmaceuticalEconomics(LayerBase):
                     "oop_share": float(oop_val) if oop_val is not None else None,
                     "patent_applications": float(patent_val) if patent_val is not None else None,
                     "flexibility_utilization_score": flexibility_score,
-                    "flexibility_tier": (
-                        "high" if flexibility_score >= 60
-                        else "moderate" if flexibility_score >= 30
-                        else "low"
-                    ),
+                    "flexibility_tier": ("high" if flexibility_score >= 60 else "moderate" if flexibility_score >= 30 else "low"),
                 }
 
         # --- Score ---

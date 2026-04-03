@@ -70,8 +70,7 @@ def _sir_macro(
     t_eval = np.arange(0, T + 1, dtype=float)
     y0 = [S0, I0, R0_val, D0]
 
-    sol = integrate.solve_ivp(deriv, t_span, y0, t_eval=t_eval, method="RK45",
-                              max_step=1.0)
+    sol = integrate.solve_ivp(deriv, t_span, y0, t_eval=t_eval, method="RK45", max_step=1.0)
 
     S, Inf, R, D = sol.y
 
@@ -166,29 +165,39 @@ class PandemicEconomics(LayerBase):
         # --- SIR-macro simulation ---
         # Run baseline (no intervention) vs. lockdown scenario
         sir_params = kwargs.get("sir_params", {})
-        beta = sir_params.get("beta", 0.3)       # transmission rate
-        gamma = sir_params.get("gamma", 0.1)      # recovery rate (~10 day infectious period)
-        alpha = sir_params.get("alpha", 0.005)     # IFR ~0.5%
+        beta = sir_params.get("beta", 0.3)  # transmission rate
+        gamma = sir_params.get("gamma", 0.1)  # recovery rate (~10 day infectious period)
+        alpha = sir_params.get("alpha", 0.005)  # IFR ~0.5%
         T_sim = sir_params.get("horizon", 365)
         lockdown_days = sir_params.get("lockdown_days", 60)
 
         # Baseline: no lockdown
         baseline = _sir_macro(
-            S0=0.999, I0=0.001, R0_val=0.0,
-            beta=beta, gamma=gamma, alpha=alpha, T=T_sim,
+            S0=0.999,
+            I0=0.001,
+            R0_val=0.0,
+            beta=beta,
+            gamma=gamma,
+            alpha=alpha,
+            T=T_sim,
         )
 
         # Lockdown scenario
         lockdown = _sir_macro(
-            S0=0.999, I0=0.001, R0_val=0.0,
-            beta=beta, gamma=gamma, alpha=alpha, T=T_sim,
-            lockdown_start=30, lockdown_end=30 + lockdown_days,
+            S0=0.999,
+            I0=0.001,
+            R0_val=0.0,
+            beta=beta,
+            gamma=gamma,
+            alpha=alpha,
+            T=T_sim,
+            lockdown_start=30,
+            lockdown_end=30 + lockdown_days,
             lockdown_reduction=0.5,
         )
 
         sir_results = {
-            "parameters": {"beta": beta, "gamma": gamma, "alpha": alpha,
-                           "R0": round(beta / gamma, 2)},
+            "parameters": {"beta": beta, "gamma": gamma, "alpha": alpha, "R0": round(beta / gamma, 2)},
             "baseline": {
                 "peak_infected_pct": round(baseline["peak_infected"] * 100, 2),
                 "peak_day": baseline["peak_day"],
@@ -202,9 +211,7 @@ class PandemicEconomics(LayerBase):
                 "cumulative_output_loss_pct": round(lockdown["cumulative_output_loss"] * 100, 2),
                 "lockdown_days": lockdown_days,
             },
-            "lives_saved_pct": round(
-                (baseline["total_deaths"] - lockdown["total_deaths"]) * 100, 3
-            ),
+            "lives_saved_pct": round((baseline["total_deaths"] - lockdown["total_deaths"]) * 100, 3),
         }
 
         # --- Lockdown cost-benefit analysis ---
@@ -277,7 +284,7 @@ class PandemicEconomics(LayerBase):
                             pop_val = pop_yrs_c[sorted(pop_yrs_c.keys())[-1]]
 
                     excess_mortality = {
-                        "trend_period": f"{yrs[0]}-{yrs[n_trend-1]}",
+                        "trend_period": f"{yrs[0]}-{yrs[n_trend - 1]}",
                         "trend_slope": float(sl),
                         "recent_years": recent_years,
                         "excess_death_rate_per_1000": [round(float(e), 3) for e in recent_excess],
@@ -286,18 +293,14 @@ class PandemicEconomics(LayerBase):
 
                     if pop_val:
                         excess_abs = [float(e * pop_val / 1000) for e in recent_excess]
-                        excess_mortality["excess_deaths_absolute"] = [
-                            round(a, 0) for a in excess_abs
-                        ]
+                        excess_mortality["excess_deaths_absolute"] = [round(a, 0) for a in excess_abs]
                         excess_mortality["total_excess_deaths"] = round(sum(excess_abs), 0)
 
         # --- Vaccine allocation optimization (COVAX framework) ---
         # Allocate vaccines across country income groups to minimize deaths.
         # Emanuel et al. (2020): prioritize by expected years of life saved.
         vaccine_alloc = None
-        income_groups: dict[str, list[tuple[str, float, float]]] = {
-            "high": [], "upper_middle": [], "lower_middle": [], "low": []
-        }
+        income_groups: dict[str, list[tuple[str, float, float]]] = {"high": [], "upper_middle": [], "lower_middle": [], "low": []}
 
         for iso in set(gdppc_data.keys()) & set(pop_data.keys()):
             g_years = gdppc_data[iso]
@@ -330,9 +333,7 @@ class PandemicEconomics(LayerBase):
                         "avg_gdp_per_capita": float(avg_gdppc),
                     }
 
-            total_global_pop = sum(
-                gs["total_population"] for gs in group_stats.values()
-            )
+            total_global_pop = sum(gs["total_population"] for gs in group_stats.values())
 
             # COVAX fair allocation: proportional to population (20% initial target)
             covax_target = 0.20  # 20% population coverage
@@ -341,19 +342,17 @@ class PandemicEconomics(LayerBase):
                 group_stats[group]["population_share"] = round(float(pop_share) * 100, 1)
                 group_stats[group]["covax_doses_share"] = round(float(pop_share) * 100, 1)
                 group_stats[group]["doses_needed_20pct"] = round(
-                    group_stats[group]["total_population"] * covax_target * 2, 0  # 2 doses
+                    group_stats[group]["total_population"] * covax_target * 2,
+                    0,  # 2 doses
                 )
 
             # Optimal: prioritize by IFR * population (more deaths averted per dose)
             # Developing countries have younger populations (lower IFR) but less capacity
-            ifr_by_group = {"high": 0.01, "upper_middle": 0.007,
-                            "lower_middle": 0.005, "low": 0.004}
+            ifr_by_group = {"high": 0.01, "upper_middle": 0.007, "lower_middle": 0.005, "low": 0.004}
             for group in group_stats:
                 ifr = ifr_by_group.get(group, 0.005)
                 group_stats[group]["assumed_ifr"] = ifr
-                group_stats[group]["potential_deaths_no_vaccine"] = round(
-                    group_stats[group]["total_population"] * 0.5 * ifr, 0
-                )
+                group_stats[group]["potential_deaths_no_vaccine"] = round(group_stats[group]["total_population"] * 0.5 * ifr, 0)
 
             # Target country group
             target_group = None

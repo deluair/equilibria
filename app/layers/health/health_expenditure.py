@@ -240,11 +240,7 @@ class HealthExpenditure(LayerBase):
         dea_outputs = []
 
         for iso in set(the_data.keys()) & set(gdppc_data.keys()) & set(le_data.keys()):
-            years = sorted(
-                set(the_data[iso].keys())
-                & set(gdppc_data[iso].keys())
-                & set(le_data[iso].keys())
-            )
+            years = sorted(set(the_data[iso].keys()) & set(gdppc_data[iso].keys()) & set(le_data[iso].keys()))
             if years:
                 yr = years[-1]
                 t_val = the_data[iso][yr]
@@ -262,16 +258,14 @@ class HealthExpenditure(LayerBase):
             eff_scores = _dea_output_oriented(inp_arr, out_arr)
 
             # Rank by efficiency
-            ranked = sorted(zip(dea_countries, eff_scores.tolist(), dea_inputs, dea_outputs),
-                            key=lambda x: -x[1])
+            ranked = sorted(zip(dea_countries, eff_scores.tolist(), dea_inputs, dea_outputs), key=lambda x: -x[1])
 
             dea_results = {
                 "n_countries": len(dea_countries),
                 "frontier_countries": [c for c, s, _, _ in ranked if s >= 0.99],
                 "mean_efficiency": float(np.mean(eff_scores)),
                 "top_10": [
-                    {"iso3": c, "efficiency": round(s, 4),
-                     "he_per_capita": round(inp, 1), "life_expectancy": round(out, 1)}
+                    {"iso3": c, "efficiency": round(s, 4), "he_per_capita": round(inp, 1), "life_expectancy": round(out, 1)}
                     for c, s, inp, out in ranked[:10]
                 ],
             }

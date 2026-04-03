@@ -274,10 +274,8 @@ class DiseaseBurden(LayerBase):
 
             # Countries above and below the curve
             residuals = le_arr - y_hat_lin
-            above = [(iso_list[i], float(residuals[i]))
-                     for i in np.argsort(-residuals)[:5]]
-            below = [(iso_list[i], float(residuals[i]))
-                     for i in np.argsort(residuals)[:5]]
+            above = [(iso_list[i], float(residuals[i])) for i in np.argsort(-residuals)[:5]]
+            below = [(iso_list[i], float(residuals[i])) for i in np.argsort(residuals)[:5]]
 
             preston = {
                 "log_linear": {

@@ -256,10 +256,7 @@ class HealthInsurance(LayerBase):
                 "oop_share": float(oop_val) if oop_val is not None else None,
                 "financial_protection_gap": bool(oop_val and oop_val > 25),
                 "coverage_tier": (
-                    "high" if current_uhc >= 80
-                    else "medium" if current_uhc >= 60
-                    else "low" if current_uhc >= 40
-                    else "very_low"
+                    "high" if current_uhc >= 80 else "medium" if current_uhc >= 60 else "low" if current_uhc >= 40 else "very_low"
                 ),
             }
 

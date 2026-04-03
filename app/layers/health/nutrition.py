@@ -144,8 +144,7 @@ class NutritionEconomics(LayerBase):
                 "r_squared": float(r_val**2),
                 "n_countries": len(stunt_list),
                 "interpretation": (
-                    "10% income increase associated with "
-                    f"{abs(slope * 10):.1f}% {'decrease' if slope < 0 else 'increase'} in stunting"
+                    f"10% income increase associated with {abs(slope * 10):.1f}% {'decrease' if slope < 0 else 'increase'} in stunting"
                 ),
             }
 
@@ -252,10 +251,7 @@ class NutritionEconomics(LayerBase):
                     }
 
             if costs:
-                total_gdp_loss = sum(
-                    c.get("gdp_loss_pct", 0) or c.get("estimated_gdp_loss_pct", 0)
-                    for c in costs.values()
-                )
+                total_gdp_loss = sum(c.get("gdp_loss_pct", 0) or c.get("estimated_gdp_loss_pct", 0) for c in costs.values())
                 costs["total_estimated_gdp_loss_pct"] = round(total_gdp_loss, 2)
                 deficiency_costs = costs
 
@@ -311,11 +307,7 @@ class NutritionEconomics(LayerBase):
                 if p not in seen:
                     unique.append(p)
                     seen.add(p)
-            intervention_priority = [
-                {"intervention": name, **interventions[name]}
-                for name in unique
-                if name in interventions
-            ]
+            intervention_priority = [{"intervention": name, **interventions[name]} for name in unique if name in interventions]
 
         # --- Score ---
         score = 30
