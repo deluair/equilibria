@@ -40,10 +40,10 @@ async def test_compute_single_asset_returns_unavailable(db_conn):
 
 async def test_compute_two_assets_returns_score(db_conn):
     rng = np.random.default_rng(4)
-    dates = [f"20{y:02d}-{m:02d}-01" for y in range(20, 21) for m in range(1, 13)]
+    dates = [f"20{y:02d}-{m:02d}-01" for y in range(24, 26) for m in range(1, 13)]
     for tag in ("equities", "bonds"):
         sid = await _insert_series(db_conn, "fred", f"ret_{tag}", "GBR", f"{tag}_return")
-        await _insert_points(db_conn, sid, list(zip(dates, rng.normal(0.005, 0.03, 12).tolist())))
+        await _insert_points(db_conn, sid, list(zip(dates, rng.normal(0.005, 0.03, 24).tolist())))
 
     result = await EfficientFrontier().compute(db_conn, country_iso3="GBR")
     assert isinstance(result.get("score"), float)
