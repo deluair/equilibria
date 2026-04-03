@@ -58,14 +58,15 @@ async def health():
 
 # Layer API routers (optional, loaded if present)
 _router_modules = [
-    ("app.api.l1_monetary", "/api/l1", "L1 Monetary"),
-    ("app.api.l2_fiscal", "/api/l2", "L2 Fiscal"),
-    ("app.api.l3_external", "/api/l3", "L3 External"),
-    ("app.api.l4_structural", "/api/l4", "L4 Structural"),
-    ("app.api.l5_political", "/api/l5", "L5 Political"),
-    ("app.api.composite", "/api/composite", "Composite"),
-    ("app.api.briefings", "/api/briefings", "Briefings"),
-    ("app.api.data", "/api/data", "Data"),
+    ("app.api.health", "/api", "Health"),
+    ("app.api.trade", "/api", "L1 Trade"),
+    ("app.api.macro", "/api", "L2 Macro"),
+    ("app.api.labor", "/api", "L3 Labor"),
+    ("app.api.development", "/api", "L4 Development"),
+    ("app.api.agricultural", "/api", "L5 Agricultural"),
+    ("app.api.integration", "/api", "L6 Integration"),
+    ("app.api.briefings", "/api", "Briefings"),
+    ("app.api.chat", "/api", "Chat"),
 ]
 
 for module_path, prefix, tag in _router_modules:
