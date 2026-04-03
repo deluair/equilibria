@@ -21,6 +21,7 @@ with inelastic export supply signals price-taking vulnerability (high score).
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

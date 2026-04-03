@@ -34,6 +34,7 @@ Score: model fit deviation. Poor fit -> STRESS (unusual migration patterns).
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

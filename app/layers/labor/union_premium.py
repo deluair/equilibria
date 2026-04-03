@@ -38,6 +38,7 @@ Moderate premium with stable density -> STABLE.
 
 import numpy as np
 from scipy import stats as sp_stats
+
 from app.layers.base import LayerBase
 
 
@@ -196,7 +197,7 @@ class UnionWagePremium(LayerBase):
             # Score and Hessian
             ratio = phi / (Phi * (1 - Phi))
             w = ratio * phi
-            working_resid = (d - Phi) / (Phi * (1 - Phi)) * phi
+            (d - Phi) / (Phi * (1 - Phi)) * phi
 
             W = np.diag(np.clip(w, 1e-10, 1e10))
             ZtWZ = Z.T @ W @ Z

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-from scipy import linalg
 
 from app.layers.base import LayerBase
 
@@ -171,7 +170,7 @@ class Nowcasting(LayerBase):
                 continue
             x_growth = np.diff(x_levels) / np.maximum(np.abs(x_levels[:-1]), 1e-12) * 100
             y_aligned = y[1:]
-            common_aligned = common[1:]
+            common[1:]
 
             if len(y_aligned) < 6:
                 continue
@@ -184,7 +183,7 @@ class Nowcasting(LayerBase):
             r_squared = 1 - np.sum(residuals ** 2) / np.sum((y_aligned - np.mean(y_aligned)) ** 2)
 
             # Nowcast using latest available monthly data
-            monthly_dates = sorted(data.keys())
+            sorted(data.keys())
             latest_quarterly = self._latest_quarterly_growth(data)
             if latest_quarterly is not None:
                 nowcast = float(beta[0] + beta[1] * latest_quarterly)

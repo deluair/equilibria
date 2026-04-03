@@ -30,7 +30,6 @@ Sources: FRED (CPI inflation, unemployment rate, output gap)
 """
 
 import numpy as np
-from scipy import optimize
 
 from app.layers.base import LayerBase
 
@@ -169,7 +168,7 @@ class PhillipsCurve(LayerBase):
 
                 # Hybrid NKPC: pi_t = gamma_f * pi_{t+1} + gamma_b * pi_{t-1} + kappa * x_t
                 # Use 2-period interior to get leads and lags
-                pi_lead = pi_nk[2:]
+                pi_nk[2:]
                 pi_lag = pi_nk[:-2]
                 pi_curr = pi_nk[1:-1]
                 gap_curr = gap_nk[1:-1]
@@ -177,7 +176,7 @@ class PhillipsCurve(LayerBase):
                 # IV estimation: instrument pi_{t+1} with pi_{t-2}, gap_{t-1}
                 # Simplified: OLS on reduced form for signal extraction
                 X_nk = np.column_stack([np.ones(len(pi_curr)), pi_lag, gap_curr])
-                nk_ols = _ols(pi_curr, X_nk)
+                _ols(pi_curr, X_nk)
 
                 # Estimate forward-looking component via 2SLS
                 # First stage: regress pi_{t+1} on instruments (pi_{t-1}, pi_{t-2}, gap_{t-1})

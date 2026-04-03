@@ -243,7 +243,7 @@ class CountryProfile(LayerBase):
             if not peer_values:
                 continue
 
-            all_values = peer_values + [target]
+            peer_values + [target]
             # Lower score is better (less stress), so percentile = fraction below
             rank = sum(1 for v in peer_values if v > target)
             pctile = rank / len(peer_values) * 100.0

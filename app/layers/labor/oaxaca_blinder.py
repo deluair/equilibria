@@ -29,6 +29,7 @@ small gap (<5%) -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

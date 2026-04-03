@@ -36,6 +36,7 @@ Low dispersion -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

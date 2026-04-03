@@ -96,7 +96,7 @@ class DebtSustainability(LayerBase):
             min_len = min(len(r_vals), len(g_vals), len(debt))
             r = r_vals[-min_len:] / 100  # convert from percent
             g = g_vals[-min_len:] / 100
-            d = debt[-min_len:]
+            debt[-min_len:]
             r_g = r - g
 
             results["r_minus_g"] = {

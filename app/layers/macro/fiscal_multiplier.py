@@ -186,7 +186,7 @@ class FiscalMultiplier(LayerBase):
         except ValueError as exc:
             return {"score": 50, "results": {"error": str(exc)}}
 
-        sigma = var_res["sigma"]
+        var_res["sigma"]
 
         # --- Blanchard-Perotti identification ---
         # Step 1: Remove automatic tax response to output

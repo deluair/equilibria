@@ -28,6 +28,7 @@ increases directly raise consumer prices (high stress).
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

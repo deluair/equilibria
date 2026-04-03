@@ -67,7 +67,7 @@ class FoodPriceVolatility(LayerBase):
         """
         country = kwargs.get("country_iso3", "BGD")
         commodity = kwargs.get("commodity")
-        lookback = kwargs.get("lookback_months", 120)
+        kwargs.get("lookback_months", 120)
 
         commodities = [commodity] if commodity else self.COMMODITIES
 

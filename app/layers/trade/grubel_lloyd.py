@@ -29,6 +29,7 @@ is driven by comparative advantage in few sectors (more vulnerable to shocks).
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

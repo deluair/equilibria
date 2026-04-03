@@ -37,6 +37,7 @@ Low exposure or rapid retraining capacity -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

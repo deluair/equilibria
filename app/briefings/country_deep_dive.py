@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import json
 import logging
 
-from app.briefings.base import BriefingBase, _ACCENT, _AMBER
+from app.briefings.base import _ACCENT, _AMBER, BriefingBase
 
 logger = logging.getLogger(__name__)
 

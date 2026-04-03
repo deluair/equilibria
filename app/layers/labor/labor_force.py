@@ -40,6 +40,7 @@ Rising or stable LFPR -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

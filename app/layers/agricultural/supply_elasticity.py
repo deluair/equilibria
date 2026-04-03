@@ -36,6 +36,7 @@ References:
 from __future__ import annotations
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 
@@ -150,7 +151,7 @@ class SupplyElasticity(LayerBase):
 
         Uses OLS with HC1 standard errors.
         """
-        T = len(acreage)
+        len(acreage)
         # Dependent variable: A_t (from t=1 onward)
         A_t = acreage[1:]
         # Regressors: lagged price P_{t-1}, lagged acreage A_{t-1}

@@ -29,7 +29,6 @@ Sources: FRED (real GDP growth, unemployment rate, CBO potential output)
 """
 
 import numpy as np
-from scipy import stats
 
 from app.layers.base import LayerBase
 

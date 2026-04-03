@@ -35,6 +35,7 @@ Normal position on curve -> STABLE/WATCH.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 
@@ -115,7 +116,6 @@ class BeveridgeCurve(LayerBase):
 
         # Matching function estimation: ln(M) = ln(A) + alpha*ln(u) + (1-alpha)*ln(v)
         # Use hires proxy from metadata if available, otherwise skip
-        matching_efficiency = None
 
         # Score: based on mismatch signal
         # High u AND high v = outward shift = mismatch = STRESS

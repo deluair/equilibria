@@ -19,7 +19,6 @@ import numpy as np
 
 from app.layers.base import LayerBase
 
-
 # UNDP goalposts for HDI normalization (2010 methodology)
 HDI_GOALPOSTS = {
     "life_expectancy": {"min": 20.0, "max": 85.0},

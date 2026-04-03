@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import numpy as np
 from scipy import stats
+
 from app.layers.base import LayerBase
 
 
@@ -333,7 +334,7 @@ class PriceTransmission(LayerBase):
         resid = dep - X_asym @ beta_asym
         ss_res = float(np.sum(resid ** 2))
         k = X_asym.shape[1]
-        sigma2 = ss_res / max(T - k, 1)
+        ss_res / max(T - k, 1)
 
         # F-test for H0: gamma_pos = gamma_neg
         # Restricted model: single gamma

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-from scipy import stats as sp_stats
 
 from app.layers.base import LayerBase
 

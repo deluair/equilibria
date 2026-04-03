@@ -101,7 +101,7 @@ class StructuralBreak(LayerBase):
         )
 
         # Score: more breaks = more regime uncertainty = higher stress
-        n_total = len(all_breaks)
+        len(all_breaks)
         n_clustered = len(clustered)
         score = float(np.clip(
             20.0 + n_clustered * 8.0 + recent_breaks * 10.0,

@@ -59,7 +59,7 @@ class VARImpulseResponse(LayerBase):
         all_dates = set()
         for data in series_map.values():
             all_dates |= set(data.keys())
-        common = sorted(all_dates)
+        sorted(all_dates)
 
         # Build data matrix
         available_names = []
@@ -386,7 +386,7 @@ class VARImpulseResponse(LayerBase):
             return {}
 
         _, _, resid_full, n_obs = var_full
-        rss_full = np.sum(resid_full ** 2, axis=0)
+        np.sum(resid_full ** 2, axis=0)
 
         for cause_idx, cause_name in enumerate(names):
             for effect_idx, effect_name in enumerate(names):
@@ -441,7 +441,7 @@ class VARImpulseResponse(LayerBase):
     def _var_forecast(Y: np.ndarray, B: np.ndarray, k: int,
                       lags: int, horizon: int) -> np.ndarray:
         """Generate h-step ahead VAR forecasts."""
-        T = Y.shape[0]
+        Y.shape[0]
         forecasts = np.zeros((horizon, k))
 
         # Last lags observations for initial conditions

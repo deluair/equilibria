@@ -22,6 +22,7 @@ mapped to 0-100.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

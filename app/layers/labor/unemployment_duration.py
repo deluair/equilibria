@@ -37,6 +37,7 @@ Short spells + rising hazard -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 
@@ -172,7 +173,7 @@ class UnemploymentDuration(LayerBase):
 
         # Sort by time (descending for risk set computation)
         order = np.argsort(-t)
-        t_s = t[order]
+        t[order]
         event_s = event[order]
         X_s = X[order]
 

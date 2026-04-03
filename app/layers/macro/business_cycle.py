@@ -32,8 +32,6 @@ Sources: FRED (real GDP, industrial production)
 """
 
 import numpy as np
-from scipy import sparse
-from scipy.sparse.linalg import spsolve
 from scipy.signal import argrelextrema
 
 from app.layers.base import LayerBase

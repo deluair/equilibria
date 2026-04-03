@@ -26,6 +26,7 @@ unstable intensive margin (volatile value per product) signals vulnerability.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

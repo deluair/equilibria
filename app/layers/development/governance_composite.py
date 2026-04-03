@@ -19,7 +19,6 @@ import numpy as np
 
 from app.layers.base import LayerBase
 
-
 WGI_INDICATORS = [
     ("VA.EST", "voice_accountability"),
     ("PV.EST", "political_stability"),
@@ -71,17 +70,17 @@ class GovernanceComposite(LayerBase):
             return {"score": 50, "results": {"error": "no WGI data"}}
 
         # Filter countries with all 6 indicators
-        labels = [l for _, l in WGI_INDICATORS]
+        labels = [lbl for _, lbl in WGI_INDICATORS]
         complete_countries = {
             iso: data for iso, data in latest_data.items()
-            if all(l in data for l in labels)
+            if all(lbl in data for lbl in labels)
         }
 
         if len(complete_countries) < 10:
             # Fall back to countries with at least 4 indicators
             complete_countries = {
                 iso: data for iso, data in latest_data.items()
-                if sum(1 for l in labels if l in data) >= 4
+                if sum(1 for lbl in labels if lbl in data) >= 4
             }
 
         if len(complete_countries) < 10:
@@ -128,7 +127,7 @@ class GovernanceComposite(LayerBase):
             pca_loadings = {k: -v for k, v in pca_loadings.items()}
 
         # Equal-weight composite
-        equal_weight = np.mean(data_matrix, axis=0)
+        np.mean(data_matrix, axis=0)
         ew_composite = np.mean(data_matrix, axis=1)
 
         # Rankings
@@ -169,7 +168,7 @@ class GovernanceComposite(LayerBase):
                 years = sorted(yearly_data.keys())
                 avg_by_year = []
                 for yr in years:
-                    vals = [yearly_data[yr].get(l) for l in labels if l in yearly_data[yr]]
+                    vals = [yearly_data[yr].get(lbl) for lbl in labels if lbl in yearly_data[yr]]
                     if vals:
                         avg_by_year.append(float(np.mean(vals)))
                     else:

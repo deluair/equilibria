@@ -38,6 +38,7 @@ of education signal.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

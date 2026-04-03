@@ -36,6 +36,7 @@ channel (low costs, high formal share) -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 
-from app.config import LAYER_WEIGHTS, SIGNAL_LEVELS
+from app.config import LAYER_WEIGHTS
 from app.layers.base import LayerBase
 
 logger = logging.getLogger(__name__)

@@ -43,6 +43,7 @@ References:
 from __future__ import annotations
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 
@@ -175,7 +176,7 @@ class DemandSystem(LayerBase):
             w_i = W[:, i]
             # Regressors: constant, ln(p_1)...ln(p_n), ln(X/P)
             X_mat = np.column_stack([np.ones(T), P, ln_real_X])
-            k = X_mat.shape[1]
+            X_mat.shape[1]
 
             try:
                 beta = np.linalg.lstsq(X_mat, w_i, rcond=None)[0]

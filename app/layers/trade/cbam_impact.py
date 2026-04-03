@@ -24,9 +24,7 @@ The score reflects CBAM exposure: high share of covered products in EU
 exports, high carbon intensity gap, and limited ability to divert.
 """
 
-import numpy as np
 from app.layers.base import LayerBase
-
 
 # CBAM-covered HS chapters (approximate)
 CBAM_HS_CHAPTERS = {

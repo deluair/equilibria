@@ -25,6 +25,7 @@ and high volatility push the score higher.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

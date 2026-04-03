@@ -20,6 +20,7 @@ shocks or isolation from global supply chains.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

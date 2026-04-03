@@ -29,6 +29,7 @@ low premium (<5%) -> STABLE (compressed wages), moderate -> WATCH.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

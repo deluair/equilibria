@@ -39,6 +39,7 @@ Balanced tightness -> STABLE.
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 
@@ -122,7 +123,7 @@ class LaborMarketTightness(LayerBase):
             r2_match = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
 
             # Time-varying efficiency (residuals from constant-A model)
-            efficiency_residuals = np.exp(resid_match).tolist()
+            np.exp(resid_match).tolist()
 
             # CRS test: alpha + (1-alpha) should = 1
             crs_sum = alpha + one_minus_alpha

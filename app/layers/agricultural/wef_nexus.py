@@ -280,7 +280,7 @@ class WEFNexus(LayerBase):
         # If all sectors stressed, penalty amplifies
         mean_stress = float(np.mean(stresses))
         max_stress = float(np.max(stresses))
-        min_stress = float(np.min(stresses))
+        float(np.min(stresses))
 
         # Cascading risk: higher when coupling is high AND sectors are stressed
         coupling_factor = float(np.mean([we_coupling, ef_coupling / 10, wf_coupling]))

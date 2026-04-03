@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import numpy as np
 import statsmodels.api as sm
-from scipy import stats as sp_stats
 
 from app.layers.base import LayerBase
 
@@ -106,7 +105,6 @@ class InstitutionalQuality(LayerBase):
         )
 
         # OLS with controls
-        ols_controlled = None
         if geo_rows:
             geo_dict: dict[str, dict[str, float]] = {}
             for r in geo_rows:

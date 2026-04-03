@@ -39,7 +39,7 @@ def _generalized_entropy(x: np.ndarray, alpha: float) -> float:
     if len(x) < 2:
         return 0.0
     mu = np.mean(x)
-    n = len(x)
+    len(x)
 
     if alpha == 0:
         return float(np.mean(np.log(mu / x)))

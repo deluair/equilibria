@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-from scipy import linalg
 
 from app.layers.base import LayerBase
 
@@ -80,7 +79,7 @@ class MonetaryTransmission(LayerBase):
         if policy_data:
             policy_dates = sorted(policy_data.keys())
             if len(policy_dates) >= 12:
-                policy_changes = np.diff([policy_data[d] for d in policy_dates])
+                np.diff([policy_data[d] for d in policy_dates])
                 for name, sid in self.INTEREST_RATE_CHANNEL.items():
                     channel_data = series_map.get(sid, {})
                     common = sorted(set(policy_dates) & set(channel_data.keys()))

@@ -101,7 +101,7 @@ class ExchangeRatePassThrough(LayerBase):
             # First differences
             de = np.diff(e)
             dp = np.diff(p)
-            dates_diff = common[1:]
+            common[1:]
 
             # Build regression matrix
             # Need n_lags of lagged exchange rate changes
@@ -288,7 +288,7 @@ class ExchangeRatePassThrough(LayerBase):
                 results["var_erpt"] = var_erpt_results
 
         # --- Rolling ERPT (time-varying) ---
-        if f"erpt_import_prices" in results or f"erpt_cpi" in results:
+        if "erpt_import_prices" in results or "erpt_cpi" in results:
             price_key_roll = "import_prices" if "import_prices" in data else "cpi"
             common_roll = sorted(set(data["exchange_rate"]) & set(data[price_key_roll]))
 

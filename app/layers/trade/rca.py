@@ -19,6 +19,7 @@ or declining RCA in key sectors pushes the score higher (more vulnerable).
 """
 
 import numpy as np
+
 from app.layers.base import LayerBase
 
 

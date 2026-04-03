@@ -10,8 +10,6 @@ import logging
 from datetime import datetime, timezone
 from itertools import combinations
 
-import numpy as np
-
 from app.config import LAYER_WEIGHTS
 from app.layers.base import LayerBase
 

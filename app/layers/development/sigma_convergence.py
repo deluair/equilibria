@@ -13,7 +13,6 @@ Key references:
 from __future__ import annotations
 
 import numpy as np
-from scipy import stats as sp_stats
 import statsmodels.api as sm
 
 from app.layers.base import LayerBase

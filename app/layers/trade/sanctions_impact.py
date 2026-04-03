@@ -45,7 +45,7 @@ class SanctionsImpact(LayerBase):
         """
         reporter = kwargs.get("reporter", "USA")
         year = kwargs.get("year", 2022)
-        target = kwargs.get("target_country")
+        kwargs.get("target_country")
 
         # Fetch bilateral trade with sanctions indicators
         rows = await db.execute(

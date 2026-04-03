@@ -18,7 +18,6 @@ import numpy as np
 
 from app.layers.base import LayerBase
 
-
 # MPI indicator structure: (series_id, dimension, weight, deprivation_threshold, direction)
 # direction: "below" means deprived if value < threshold, "above" means deprived if value > threshold
 MPI_INDICATORS = [
