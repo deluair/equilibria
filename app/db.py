@@ -99,6 +99,62 @@ CREATE TABLE IF NOT EXISTS conversation_messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_conv_messages_conv ON conversation_messages(conversation_id);
+
+CREATE TABLE IF NOT EXISTS kb_facts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    claim TEXT NOT NULL,
+    topic TEXT NOT NULL,
+    subtopic TEXT,
+    country_iso3 TEXT,
+    confidence REAL DEFAULT 0.5,
+    evidence TEXT DEFAULT '[]',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    stale_at TEXT DEFAULT (datetime('now', '+30 days')),
+    is_stale INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS kb_articles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
+    topic TEXT NOT NULL,
+    country_iso3 TEXT,
+    content TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    fact_count INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS kb_article_facts (
+    article_id INTEGER NOT NULL REFERENCES kb_articles(id),
+    fact_id INTEGER NOT NULL REFERENCES kb_facts(id),
+    PRIMARY KEY (article_id, fact_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb_sources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fact_id INTEGER NOT NULL REFERENCES kb_facts(id),
+    source_type TEXT NOT NULL,
+    source_id INTEGER NOT NULL,
+    source_date TEXT NOT NULL
+);
+
+CREATE VIRTUAL TABLE IF NOT EXISTS kb_search USING fts5(
+    fact_id,
+    article_id,
+    title,
+    content,
+    content_rowid=rowid
+);
+
+CREATE INDEX IF NOT EXISTS idx_kb_facts_topic ON kb_facts(topic, country_iso3);
+CREATE INDEX IF NOT EXISTS idx_kb_facts_stale ON kb_facts(is_stale);
+CREATE INDEX IF NOT EXISTS idx_kb_facts_subtopic ON kb_facts(subtopic);
+CREATE INDEX IF NOT EXISTS idx_kb_articles_topic ON kb_articles(topic, country_iso3);
+CREATE INDEX IF NOT EXISTS idx_kb_sources_type ON kb_sources(source_type, source_id);
+CREATE INDEX IF NOT EXISTS idx_kb_sources_fact ON kb_sources(fact_id);
 """
 
 
