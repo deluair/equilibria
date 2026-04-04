@@ -84,6 +84,21 @@ CREATE INDEX IF NOT EXISTS idx_analysis_results_type ON analysis_results(analysi
 CREATE INDEX IF NOT EXISTS idx_analysis_results_country ON analysis_results(country_iso3);
 CREATE INDEX IF NOT EXISTS idx_briefings_country ON briefings(country_iso3);
 CREATE INDEX IF NOT EXISTS idx_collection_log_source ON collection_log(source);
+
+CREATE TABLE IF NOT EXISTS conversations (
+    id TEXT PRIMARY KEY,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS conversation_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conversation_id TEXT NOT NULL REFERENCES conversations(id),
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_conv_messages_conv ON conversation_messages(conversation_id);
 """
 
 
