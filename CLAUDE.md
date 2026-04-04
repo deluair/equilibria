@@ -27,7 +27,7 @@ app/
   db.py                # aiosqlite pool, schema (6 tables, 8 indexes)
   ai/
     brain.py           # Claude Sonnet 4 agentic loop (10 rounds)
-    tools.py           # 22 tools in TOOL_REGISTRY
+    tools.py           # 24 tools in TOOL_REGISTRY
     citations.py       # Citation formatting
   api/
     health.py          # /api/health
@@ -191,19 +191,29 @@ FRED, WDI, ILO, FAOSTAT, BLS, IMF WEO, Penn World Table, Comtrade, USDA, NOAA, V
 All follow BaseCollector pattern (collect -> validate -> store pipeline, httpx with retry).
 
 ## AI Brain
-Claude Sonnet 4 (`claude-sonnet-4-6`) with 22 tools, 10-round agentic loop.
+Claude Sonnet 4 (`claude-sonnet-4-6`) with 24 tools, 10-round agentic loop.
 Tools: get_system_status, estimate_gravity, compute_rca, bilateral_decomposition,
 tariff_simulation, gdp_decompose, estimate_phillips, fiscal_sustainability, cycle_dating,
 wage_decomposition, returns_to_education, shift_share, convergence_test, poverty_analysis,
 institutional_iv, demand_system, food_security_index, price_transmission, run_estimation,
-compare_countries, query_data, generate_figure.
+compare_countries, query_data, generate_figure, search_knowledge, file_insight.
 
 ## Briefings
 3 implemented: Economic Conditions, Trade Flash, Country Deep Dive.
 All inherit from BriefingBase. Stored in briefings table with layer_scores and composite_score.
 
+## Knowledge Base
+LLM-compiled wiki from accumulated analysis data. Three-stage compiler pipeline:
+1. Fact Extraction: Claude extracts claims from analysis_results and briefings
+2. Article Compilation: Groups of 3+ facts compiled into markdown articles
+3. Staleness Sweep: 30-day TTL with source-linked refresh
+
+Tables: kb_facts (claims with confidence/evidence), kb_articles (compiled markdown), kb_article_facts (links), kb_sources (data lineage). FTS5 search via kb_search virtual table.
+
+Frontend: /knowledge (index), /knowledge/[slug] (article), /knowledge/facts (explorer).
+
 ## DB Schema (equilibria.db)
-8 tables: countries, data_series, data_points, analysis_results, briefings, collection_log, conversations, conversation_messages.
+12 tables: countries, data_series, data_points, analysis_results, briefings, collection_log, conversations, conversation_messages, kb_facts, kb_articles, kb_article_facts, kb_sources.
 WAL mode, foreign keys ON, busy_timeout 5000ms.
 
 ## Tests

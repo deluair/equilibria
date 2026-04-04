@@ -9,9 +9,9 @@ from app.ai.tools import TOOL_REGISTRY, execute_tool, get_tool_definitions
 # Registry size
 # ---------------------------------------------------------------------------
 
-def test_tool_registry_has_22_tools():
-    """TOOL_REGISTRY must contain exactly 22 tools."""
-    assert len(TOOL_REGISTRY) == 22
+def test_tool_registry_has_24_tools():
+    """TOOL_REGISTRY must contain exactly 24 tools."""
+    assert len(TOOL_REGISTRY) == 24
 
 
 def test_all_registry_tools_have_required_keys():
@@ -40,9 +40,9 @@ def test_get_tool_definitions_returns_list():
 
 
 def test_get_tool_definitions_count():
-    """get_tool_definitions() must return 22 definitions."""
+    """get_tool_definitions() must return 24 definitions."""
     defs = get_tool_definitions()
-    assert len(defs) == 22
+    assert len(defs) == 24
 
 
 def test_get_tool_definitions_has_required_keys():
@@ -177,7 +177,9 @@ async def test_execute_tool_with_bad_args_returns_error(tmp_db):
     "compare_countries",
     "query_data",
     "generate_figure",
+    "search_knowledge",
+    "file_insight",
 ])
 def test_expected_tool_names_present(tool_name):
-    """Each of the 22 expected tool names must be in TOOL_REGISTRY."""
+    """Each of the 24 expected tool names must be in TOOL_REGISTRY."""
     assert tool_name in TOOL_REGISTRY, f"Missing tool: {tool_name}"
