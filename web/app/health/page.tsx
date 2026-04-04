@@ -93,7 +93,7 @@ export default function HealthPage() {
                   borderRadius: "0.5rem",
                   fontSize: "0.75rem",
                 }}
-                formatter={(v: number) => [`${v.toFixed(1)}%`, "Share"]}
+                formatter={(v) => [`${Number(v).toFixed(1)}%`, "Share"]}
               />
               <Bar dataKey="share" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} />
             </BarChart>

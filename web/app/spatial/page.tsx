@@ -103,9 +103,10 @@ export default function SpatialPage() {
                   borderRadius: "0.5rem",
                   fontSize: "0.75rem",
                 }}
-                formatter={(v: number, name: string) => {
-                  if (name === "initial_gdp") return [`$${v.toLocaleString()}`, "Initial GDP/cap"];
-                  if (name === "growth_rate") return [`${v.toFixed(1)}%`, "Growth rate"];
+                formatter={(v, name) => {
+                  const n = Number(v);
+                  if (name === "initial_gdp") return [`$${n.toLocaleString()}`, "Initial GDP/cap"];
+                  if (name === "growth_rate") return [`${n.toFixed(1)}%`, "Growth rate"];
                   return [v, name];
                 }}
                 labelFormatter={(_, payload) => payload?.[0]?.payload?.region ?? ""}

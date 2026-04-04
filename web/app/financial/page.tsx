@@ -94,7 +94,7 @@ export default function FinancialPage() {
                   borderRadius: "0.5rem",
                   fontSize: "0.75rem",
                 }}
-                formatter={(v: number) => [`${v.toFixed(1)}`, "Value"]}
+                formatter={(v) => [`${Number(v).toFixed(1)}`, "Value"]}
               />
               <Bar dataKey="value" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} />
             </BarChart>

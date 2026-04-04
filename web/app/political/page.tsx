@@ -98,7 +98,7 @@ export default function PoliticalPage() {
                   borderRadius: "0.5rem",
                   fontSize: "0.75rem",
                 }}
-                formatter={(v: number) => [`${v.toFixed(2)}`, "WGI Score"]}
+                formatter={(v) => [`${Number(v).toFixed(2)}`, "WGI Score"]}
               />
               <ReferenceLine x={0} stroke="var(--border)" strokeWidth={1} />
               <Bar dataKey="value" fill="var(--accent-secondary)" radius={[0, 4, 4, 0]} />
