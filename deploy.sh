@@ -20,9 +20,9 @@ rsync -avz \
     . "${VPS_HOST}:${REMOTE}/"
 
 # Install deps and restart service
-ssh "$VPS_HOST" "cd $REMOTE && source .venv/bin/activate && pip install -e . && sudo systemctl restart equilibria"
+ssh "$VPS_HOST" "cd $REMOTE && uv sync && sudo systemctl restart equilibria"
 
-# Health check
+# Health check (on VPS)
 echo "Health check..."
 sleep 3
-curl -sf "http://localhost:8003/api/health" && echo " OK" || echo " FAILED"
+ssh "$VPS_HOST" "curl -sf http://localhost:8003/api/health" && echo " OK" || echo " FAILED"
