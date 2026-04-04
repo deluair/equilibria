@@ -36,6 +36,12 @@ class BaseCollector(ABC):
             self.logger.info(
                 f"[{self.name}] collected={len(raw)} valid={len(valid)} stored={stored}"
             )
+            # Trigger KB fact extraction for new data
+            try:
+                from app.kb.extractor import extract_new_facts
+                await extract_new_facts()
+            except Exception:
+                self.logger.debug("KB fact extraction skipped")
             return {
                 "status": "success",
                 "collected": len(raw),

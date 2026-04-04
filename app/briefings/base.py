@@ -209,4 +209,16 @@ class BriefingBase(ABC):
         await db.conn.commit()
         row_id = cursor.lastrowid
         logger.info("Saved briefing id=%d type=%s", row_id, result["briefing_type"])
+        # Trigger KB fact extraction for this briefing
+        try:
+            from app.kb.extractor import extract_facts_from_briefing
+            briefing_data = {
+                "id": row_id,
+                "country_iso3": country_iso3,
+                "title": result["title"],
+                "content": result["body_html"],
+            }
+            await extract_facts_from_briefing(briefing_data)
+        except Exception:
+            logger.debug("KB fact extraction from briefing skipped")
         return row_id
