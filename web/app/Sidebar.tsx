@@ -24,6 +24,12 @@ const navSections = [
       { name: "L10 Public", href: "/public", icon: "10" },
       { name: "L11 Spatial", href: "/spatial", icon: "11" },
       { name: "L12 Political", href: "/political", icon: "12" },
+      { name: "L13 Behavioral", href: "/behavioral", icon: "13" },
+      { name: "L14 Industrial", href: "/industrial", icon: "14" },
+      { name: "L15 Monetary", href: "/monetary", icon: "15" },
+      { name: "L16 Energy", href: "/energy", icon: "16" },
+      { name: "L17 Demographic", href: "/demographic", icon: "17" },
+      { name: "L18 Methods", href: "/methods", icon: "18" },
     ],
   },
   {

@@ -31,14 +31,26 @@ const defaultLayers: LayerScore[] = [
   { layer: "Labor", code: "L3", score: null, signal: null, description: "Wage analysis, employment trends" },
   { layer: "Development", code: "L4", score: null, signal: null, description: "Convergence, poverty, institutions" },
   { layer: "Agricultural", code: "L5", score: null, signal: null, description: "Food security, price transmission" },
+  { layer: "Integration", code: "L6", score: null, signal: null, description: "Composite scores, cross-layer analysis" },
+  { layer: "Financial", code: "L7", score: null, signal: null, description: "Banking stability, credit cycles" },
+  { layer: "Health", code: "L8", score: null, signal: null, description: "Health expenditure, disease burden" },
+  { layer: "Environmental", code: "L9", score: null, signal: null, description: "Carbon pricing, emissions, green growth" },
+  { layer: "Public", code: "L10", score: null, signal: null, description: "Taxation, fiscal federalism, pensions" },
+  { layer: "Spatial", code: "L11", score: null, signal: null, description: "Agglomeration, housing, transport" },
+  { layer: "Political", code: "L12", score: null, signal: null, description: "Governance, conflict, corruption" },
+  { layer: "Behavioral", code: "L13", score: null, signal: null, description: "Nudges, biases, time preferences" },
+  { layer: "Industrial", code: "L14", score: null, signal: null, description: "Market concentration, firm dynamics" },
+  { layer: "Monetary", code: "L15", score: null, signal: null, description: "Money demand, inflation targeting" },
+  { layer: "Energy", code: "L16", score: null, signal: null, description: "Oil markets, renewables, efficiency" },
+  { layer: "Demographic", code: "L17", score: null, signal: null, description: "Aging, fertility, human capital" },
+  { layer: "Methods", code: "L18", score: null, signal: null, description: "Econometric methods toolkit" },
 ];
 
 const layerHrefs: Record<string, string> = {
-  L1: "/trade",
-  L2: "/macro",
-  L3: "/labor",
-  L4: "/development",
-  L5: "/agricultural",
+  L1: "/trade", L2: "/macro", L3: "/labor", L4: "/development", L5: "/agricultural",
+  L7: "/financial", L8: "/health", L9: "/environmental", L10: "/public", L11: "/spatial",
+  L12: "/political", L13: "/behavioral", L14: "/industrial", L15: "/monetary",
+  L16: "/energy", L17: "/demographic", L18: "/methods",
 };
 
 export default function Dashboard() {
@@ -125,7 +137,7 @@ export default function Dashboard() {
       )}
 
       {/* Layer Score Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         {layers.map((layer) => (
           <LayerCard
             key={layer.code}
