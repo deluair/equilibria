@@ -56,6 +56,7 @@ const layerHrefs: Record<string, string> = {
 export default function Dashboard() {
   const [composite, setComposite] = useState<CompositeData | null>(null);
   const [briefings, setBriefings] = useState<Briefing[]>([]);
+  const [kbStats, setKbStats] = useState<{ total_facts: number; total_articles: number; last_compile: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,6 +76,10 @@ export default function Dashboard() {
           const data = await briefRes.value.json();
           setBriefings(Array.isArray(data) ? data.slice(0, 5) : []);
         }
+        try {
+          const kbRes = await fetch("/api/kb/stats");
+          if (kbRes.ok) setKbStats(await kbRes.json());
+        } catch {}
       } catch (e) {
         setError("Backend unavailable. Start the FastAPI server on port 8003.");
       } finally {
@@ -202,6 +207,31 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="glass-card p-5">
+          <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">
+            Knowledge Base
+          </h2>
+          {kbStats ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--text-secondary)]">Articles</span>
+                <span className="text-sm font-mono font-semibold text-[var(--text-primary)]">{kbStats.total_articles}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--text-secondary)]">Facts</span>
+                <span className="text-sm font-mono font-semibold text-[var(--text-primary)]">{kbStats.total_facts}</span>
+              </div>
+              {kbStats.last_compile && (
+                <p className="text-xs text-[var(--text-muted)]">
+                  Last compiled {new Date(kbStats.last_compile).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-[var(--text-muted)]">{loading ? "Loading..." : "Not yet compiled"}</p>
+          )}
         </div>
       </div>
     </div>

@@ -40,6 +40,13 @@ const navSections = [
     ],
   },
   {
+    label: "Intelligence",
+    items: [
+      { name: "Knowledge Base", href: "/knowledge", icon: "KB" },
+      { name: "Fact Explorer", href: "/knowledge/facts", icon: "FE" },
+    ],
+  },
+  {
     label: "Reference",
     items: [
       { name: "Methodology", href: "/methodology", icon: "M" },
