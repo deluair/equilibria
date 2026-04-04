@@ -4,7 +4,7 @@ Open-source applied economics analysis platform. 18 analytical layers, 257 modul
 
 ## Stack
 - Backend: FastAPI + aiosqlite + Python 3.11, uv
-- Frontend: Next.js 16 + React 19 + Tailwind 4 + Recharts (planned)
+- Frontend: Next.js 16 + React 19 + Tailwind 4 + Recharts
 - DB: SQLite WAL mode, single equilibria.db (pool_size=5)
 - AI: Claude Sonnet 4 brain with 22 structured tools, 10-round agentic loop
 - Deploy: OVH VPS, systemd, port 8003
@@ -203,11 +203,11 @@ compare_countries, query_data, generate_figure.
 All inherit from BriefingBase. Stored in briefings table with layer_scores and composite_score.
 
 ## DB Schema (equilibria.db)
-6 tables: countries, data_series, data_points, analysis_results, briefings, collection_log.
+8 tables: countries, data_series, data_points, analysis_results, briefings, collection_log, conversations, conversation_messages.
 WAL mode, foreign keys ON, busy_timeout 5000ms.
 
 ## Tests
-1,611 tests across 178 test files. pytest-asyncio (asyncio_mode=auto). Run with `make test`.
+1,856 tests across 178 test files. pytest-asyncio (asyncio_mode=auto). Run with `make test`.
 Coverage: layers, estimation, collectors, API endpoints, briefings, AI tools.
 
 ## Code Conventions
