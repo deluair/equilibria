@@ -449,6 +449,53 @@ async def generate_figure(
     }
 
 
+async def search_knowledge(
+    query: str,
+    topic: str | None = None,
+    country_iso3: str | None = None,
+    include_stale: bool = False,
+) -> dict:
+    """Search the accumulated knowledge base for economic insights."""
+    from app.kb.search import search_kb
+
+    results = await search_kb(
+        query=query, topic=topic, country_iso3=country_iso3, include_stale=include_stale
+    )
+    return {**results, "_citation": "Equilibria Knowledge Base"}
+
+
+async def file_insight(
+    claim: str,
+    topic: str,
+    evidence: list[dict],
+    subtopic: str | None = None,
+    country_iso3: str | None = None,
+) -> dict:
+    """File a new insight into the knowledge base."""
+    import re
+
+    from app.kb.extractor import store_fact
+    from app.kb.search import search_kb
+
+    # Strip FTS5 special characters from claim before searching
+    sanitized = re.sub(r'[^\w\s]', ' ', claim).strip()
+    existing = await search_kb(sanitized or claim, topic=topic, country_iso3=country_iso3)
+    for fact in existing.get("facts", []):
+        if fact.get("claim", "").lower() == claim.lower():
+            return {"fact_id": fact["fact_id"], "status": "duplicate"}
+    fact_id = await store_fact(
+        claim=claim,
+        topic=topic,
+        subtopic=subtopic,
+        country_iso3=country_iso3,
+        confidence=0.7,
+        evidence=evidence,
+        source_type="conversation",
+        source_id=0,
+    )
+    return {"fact_id": fact_id, "status": "created"}
+
+
 # ---------------------------------------------------------------------------
 # Tool registry
 # ---------------------------------------------------------------------------
@@ -769,6 +816,54 @@ TOOL_REGISTRY: dict[str, dict] = {
                 "data": {"type": "object", "description": "Data payload for the chart (x, y, labels, etc.)"},
             },
             "required": ["chart_type", "title", "data"],
+        },
+    },
+    "search_knowledge": {
+        "fn": search_knowledge,
+        "description": (
+            "Search the accumulated knowledge base for economic insights. "
+            "Use BEFORE running analysis tools to check for existing findings."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Free-text search query"},
+                "topic": {
+                    "type": "string",
+                    "description": "Topic filter (trade, macro, labor, development, agricultural, etc.)",
+                },
+                "country_iso3": {"type": "string", "description": "ISO3 country code filter"},
+                "include_stale": {
+                    "type": "boolean",
+                    "description": "Include stale/outdated facts (default false)",
+                },
+            },
+            "required": ["query"],
+        },
+    },
+    "file_insight": {
+        "fn": file_insight,
+        "description": (
+            "File a novel finding into the knowledge base. "
+            "Use after analysis produces a new insight worth preserving."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "claim": {"type": "string", "description": "The factual claim to store"},
+                "topic": {
+                    "type": "string",
+                    "description": "Economics topic (trade, macro, labor, development, agricultural, etc.)",
+                },
+                "evidence": {
+                    "type": "array",
+                    "items": {"type": "object"},
+                    "description": "List of evidence objects (type, id, summary)",
+                },
+                "subtopic": {"type": "string", "description": "Specific subtopic (e.g. rca, gdp_decomposition)"},
+                "country_iso3": {"type": "string", "description": "ISO3 country code if country-specific"},
+            },
+            "required": ["claim", "topic", "evidence"],
         },
     },
 }

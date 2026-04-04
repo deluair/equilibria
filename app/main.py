@@ -67,6 +67,7 @@ _router_modules = [
     ("app.api.integration", "/api", "L6 Integration"),
     ("app.api.briefings", "/api", "Briefings"),
     ("app.api.chat", "/api", "Chat"),
+    ("app.api.kb", "/api", "Knowledge Base"),
     ("app.api.crosscutting", "/api", "L-CX Crosscutting"),
     ("app.api.cultural", "/api", "L-CU Cultural"),
     ("app.api.game_theory", "/api", "L-GT Game Theory"),
