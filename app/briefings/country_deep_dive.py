@@ -326,6 +326,7 @@ class CountryDeepDiveBriefing(BriefingBase):
             country_name=data.get("country_name", self.country_iso3),
             country_iso3=self.country_iso3,
         )
+        self._resolved_title = title
         body_html = self.assemble_html()
         return {
             "title": title,
@@ -333,6 +334,18 @@ class CountryDeepDiveBriefing(BriefingBase):
             "body_html": body_html,
             "methodology_note": self.methodology_note,
         }
+
+    def assemble_html(self) -> str:
+        """Override to use pre-resolved title (avoids KeyError on {country_name})."""
+        resolved = getattr(self, "_resolved_title", None)
+        if resolved is not None:
+            original = self.title_template
+            # A fully resolved string has no {date} placeholder; format() is a no-op.
+            self.title_template = resolved
+            html = super().assemble_html()
+            self.title_template = original
+            return html
+        return super().assemble_html()
 
     async def save(self, result: dict, db, country_iso3: str = "") -> int:
         """Override to use the country_iso3 from the instance."""

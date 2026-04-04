@@ -43,24 +43,27 @@ async def test_composite_data_coverage_keys(async_client):
 
 
 @pytest.mark.asyncio
-async def test_attribution_returns_501(async_client):
-    """Attribution endpoint returns 501."""
+async def test_attribution_returns_json(async_client):
+    """Attribution endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/integration/attribution")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_crisis_comparison_returns_501(async_client):
-    """Crisis comparison endpoint returns 501."""
+async def test_crisis_comparison_returns_json(async_client):
+    """Crisis comparison endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/integration/crisis-comparison")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_country_profile_returns_501(async_client):
-    """Country profile endpoint returns 501."""
+async def test_country_profile_returns_json(async_client):
+    """Country profile endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/integration/country/BGD")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio

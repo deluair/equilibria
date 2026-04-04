@@ -4,23 +4,23 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_chat_returns_501(async_client):
-    """Chat endpoint returns 501 (not yet implemented)."""
+async def test_chat_returns_json(async_client):
+    """Chat endpoint returns 200 or 503 (no API key) with JSON payload."""
     resp = await async_client.post(
         "/api/chat",
         json={"message": "What is the current GDP growth rate?"},
     )
-    assert resp.status_code == 501
+    assert resp.status_code in (200, 503)
 
 
 @pytest.mark.asyncio
 async def test_chat_with_conversation_id(async_client):
-    """Chat endpoint with conversation_id returns 501, not 422 or 500."""
+    """Chat endpoint with conversation_id returns 200 or 503, not 422 or 500."""
     resp = await async_client.post(
         "/api/chat",
         json={"message": "Analyze trade balance", "conversation_id": "abc-123"},
     )
-    assert resp.status_code == 501
+    assert resp.status_code in (200, 503)
 
 
 @pytest.mark.asyncio

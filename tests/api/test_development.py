@@ -4,38 +4,43 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_convergence_returns_501(async_client):
-    """Convergence analysis endpoint returns 501."""
+async def test_convergence_returns_json(async_client):
+    """Convergence analysis endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/development/convergence")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_poverty_returns_501(async_client):
-    """Poverty analysis endpoint returns 501."""
+async def test_poverty_returns_json(async_client):
+    """Poverty analysis endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/development/poverty/BGD")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_institutions_returns_501(async_client):
-    """Institutional quality endpoint returns 501."""
+async def test_institutions_returns_json(async_client):
+    """Institutional quality endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/development/institutions/IND")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_hdi_returns_501(async_client):
-    """HDI decomposition endpoint returns 501."""
+async def test_hdi_returns_json(async_client):
+    """HDI decomposition endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/development/hdi/NOR")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
-async def test_development_score_returns_501(async_client):
-    """Development composite score endpoint returns 501."""
+async def test_development_score_returns_json(async_client):
+    """Development composite score endpoint returns 200 with JSON payload."""
     resp = await async_client.get("/api/development/score")
-    assert resp.status_code == 501
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), dict)
 
 
 @pytest.mark.asyncio
