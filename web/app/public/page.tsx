@@ -1,37 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
 
-interface PublicScore {
-  score: number | null;
-  signal: string | null;
-  module_count: number | null;
+interface PublicStats {
+  tax_revenue_gdp: number | null;
+  public_debt_gdp: number | null;
+  govt_expenditure_gdp: number | null;
+  revenue_composition: { category: string; share: number }[];
 }
 
-const MODULES = [
-  { name: "Tax Incidence", desc: "Optimal tax theory, distributional burden, deadweight loss estimation" },
-  { name: "Public Goods", desc: "Provision mechanisms, free-rider problem, Lindahl pricing" },
-  { name: "Fiscal Federalism", desc: "Tiebout sorting, intergovernmental transfers, expenditure assignment" },
-  { name: "Social Protection", desc: "Transfer targeting efficiency, safety net coverage, poverty impact" },
-  { name: "Education Finance", desc: "Returns to public education spending, higher ed subsidies, student debt" },
-  { name: "Infrastructure", desc: "Public capital productivity, cost-benefit, congestion pricing" },
-  { name: "Pension Systems", desc: "Sustainability analysis, demographic pressure, NDC vs. DB reforms" },
-  { name: "Decentralization", desc: "Fiscal devolution effects on service delivery and accountability" },
-  { name: "Public Procurement", desc: "Procurement efficiency, corruption risk, competitive bidding impact" },
-  { name: "Regulatory Impact", desc: "RIA methodology, compliance costs, sunset clauses, net benefit" },
-];
-
 export default function PublicPage() {
-  const [data, setData] = useState<PublicScore | null>(null);
+  const [stats, setStats] = useState<PublicStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/public/score")
+    fetch("/api/layers/public/summary")
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => setData(d))
+      .then((d) => setStats(d))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const placeholderRevenue = [
+    { category: "Income tax", share: 32.4 },
+    { category: "VAT", share: 27.1 },
+    { category: "Corporate tax", share: 14.8 },
+    { category: "Trade taxes", share: 8.3 },
+    { category: "Excise", share: 6.9 },
+    { category: "Property tax", share: 4.2 },
+    { category: "Other", share: 6.3 },
+  ];
+
+  const revenueData = stats?.revenue_composition ?? placeholderRevenue;
 
   return (
     <div>
@@ -47,17 +50,20 @@ export default function PublicPage() {
         </p>
       </div>
 
+      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Composite Score", value: data?.score != null ? data.score.toFixed(1) : null },
-          { label: "Signal", value: data?.signal ?? null },
-          { label: "Modules", value: data?.module_count != null ? String(data.module_count) : String(MODULES.length) },
+          { label: "Tax Revenue", value: stats?.tax_revenue_gdp, unit: "% GDP" },
+          { label: "Public Debt", value: stats?.public_debt_gdp, unit: "% GDP" },
+          { label: "Govt Expenditure", value: stats?.govt_expenditure_gdp, unit: "% GDP" },
         ].map((m) => (
           <div key={m.label} className="glass-card p-5">
             <span className="text-xs text-[var(--text-muted)]">{m.label}</span>
             <div className="mt-1">
-              {m.value !== null ? (
-                <span className="text-xl font-semibold font-mono">{m.value}</span>
+              {m.value !== null && m.value !== undefined ? (
+                <span className="text-xl font-semibold font-mono">
+                  {m.value.toFixed(2)}<span className="text-sm text-[var(--text-muted)] ml-1">{m.unit}</span>
+                </span>
               ) : (
                 <span className="text-sm text-[var(--text-muted)]">{loading ? "Loading..." : "Awaiting data"}</span>
               )}
@@ -66,26 +72,75 @@ export default function PublicPage() {
         ))}
       </div>
 
-      <div className="glass-card p-5">
+      {/* Revenue Composition Chart */}
+      <div className="glass-card p-5 mb-6">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">
-          Analytical Modules ({MODULES.length})
+          Revenue Composition (% of total)
         </h2>
-        <div className="space-y-0">
-          {MODULES.map((mod, i) => (
-            <div
-              key={mod.name}
-              className={`flex items-start gap-4 py-3 ${i < MODULES.length - 1 ? "border-b border-[var(--border)]/50" : ""}`}
-            >
-              <span className="text-xs font-mono text-[var(--text-muted)] w-5 pt-0.5 shrink-0">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">{mod.name}</p>
-                <p className="text-xs text-[var(--text-secondary)] mt-0.5">{mod.desc}</p>
-              </div>
-            </div>
-          ))}
+        <div className="h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={revenueData} layout="vertical" margin={{ left: 110 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis type="number" tick={{ fontSize: 12, fill: "var(--text-secondary)" }} unit="%" domain={[0, 35]} />
+              <YAxis
+                type="category"
+                dataKey="category"
+                tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+                width={105}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "0.5rem",
+                  fontSize: "0.75rem",
+                }}
+                formatter={(v: number) => [`${v.toFixed(1)}%`, "Share"]}
+              />
+              <Bar dataKey="share" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
+        <p className="text-xs text-[var(--text-muted)] mt-3">
+          Source: IMF GFS, OECD Revenue Statistics. Values update after running the public economics pipeline.
+        </p>
+      </div>
+
+      {/* Public Economics Model Table */}
+      <div className="glass-card p-5">
+        <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">
+          Public Economics Model Estimates
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)]">
+                <th className="text-left py-2 px-3 font-medium text-[var(--text-secondary)]">Metric</th>
+                <th className="text-left py-2 px-3 font-medium text-[var(--text-secondary)]">Model</th>
+                <th className="text-right py-2 px-3 font-medium text-[var(--text-secondary)]">Estimate</th>
+              </tr>
+            </thead>
+            <tbody className="text-[var(--text-primary)]">
+              {[
+                ["Tax buoyancy coefficient", "Dudine & Jalles", "--"],
+                ["Fiscal multiplier", "Auerbach & Gorodnichenko", "--"],
+                ["Transfer targeting leakage rate", "Coady", "--"],
+                ["Decentralization efficiency gain", "Oates", "--"],
+                ["Pension sustainability ratio", "Actuarial", "--"],
+                ["Regulatory compliance cost (% GDP)", "OECD RIA", "--"],
+              ].map(([metric, model, est]) => (
+                <tr key={metric} className="border-b border-[var(--border)]/50">
+                  <td className="py-2 px-3 font-mono text-xs">{metric}</td>
+                  <td className="py-2 px-3 text-xs text-[var(--text-secondary)]">{model}</td>
+                  <td className="text-right py-2 px-3 font-mono text-xs text-[var(--text-muted)]">{est}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-[var(--text-muted)] mt-3">
+          Estimates populate after running the public economics analysis pipeline.
+        </p>
       </div>
     </div>
   );

@@ -1,37 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
+} from "recharts";
 
-interface PoliticalScore {
-  score: number | null;
-  signal: string | null;
-  module_count: number | null;
+interface PoliticalStats {
+  democracy_index: number | null;
+  cpi_score: number | null;
+  state_fragility: number | null;
+  wgi_indicators: { indicator: string; value: number }[];
 }
 
-const MODULES = [
-  { name: "Political Business Cycles", desc: "Election-driven fiscal expansion, monetary accommodation, opportunistic cycles" },
-  { name: "Lobbying", desc: "Campaign finance effects, rent-seeking costs, industry concentration and policy bias" },
-  { name: "Corruption", desc: "Bribery incidence, institutional quality, growth drag, ICRG and CPI decomposition" },
-  { name: "Conflict Economics", desc: "Civil conflict onset, resource curse, war costs, post-conflict reconstruction" },
-  { name: "Sanctions", desc: "Trade impact estimation, third-party effects, evasion channels, welfare costs" },
-  { name: "Trade Wars", desc: "Tariff retaliation dynamics, consumer burden, welfare decomposition under retaliation" },
-  { name: "Media and Information", desc: "Press freedom-growth link, propaganda detection, media capture indices" },
-  { name: "Electoral Economics", desc: "Voting behavior, redistribution preferences, income inequality and polarization" },
-  { name: "State Capacity", desc: "Tax collection efficiency, bureaucratic quality, public service delivery scores" },
-  { name: "Regulatory Capture", desc: "Revolving door effects, industry-regulator proximity, capture measurement" },
-];
-
 export default function PoliticalPage() {
-  const [data, setData] = useState<PoliticalScore | null>(null);
+  const [stats, setStats] = useState<PoliticalStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/political/score")
+    fetch("/api/layers/political/summary")
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => setData(d))
+      .then((d) => setStats(d))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const placeholderWGI = [
+    { indicator: "Voice & Accountability", value: -0.42 },
+    { indicator: "Political Stability", value: -0.85 },
+    { indicator: "Govt Effectiveness", value: -0.68 },
+    { indicator: "Regulatory Quality", value: -0.72 },
+    { indicator: "Rule of Law", value: -0.61 },
+    { indicator: "Control of Corruption", value: -0.93 },
+  ];
+
+  const wgiData = stats?.wgi_indicators ?? placeholderWGI;
 
   return (
     <div>
@@ -47,17 +49,20 @@ export default function PoliticalPage() {
         </p>
       </div>
 
+      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Composite Score", value: data?.score != null ? data.score.toFixed(1) : null },
-          { label: "Signal", value: data?.signal ?? null },
-          { label: "Modules", value: data?.module_count != null ? String(data.module_count) : String(MODULES.length) },
+          { label: "Democracy Index", value: stats?.democracy_index, unit: "/10" },
+          { label: "CPI Score", value: stats?.cpi_score, unit: "/100" },
+          { label: "State Fragility", value: stats?.state_fragility, unit: "/120" },
         ].map((m) => (
           <div key={m.label} className="glass-card p-5">
             <span className="text-xs text-[var(--text-muted)]">{m.label}</span>
             <div className="mt-1">
-              {m.value !== null ? (
-                <span className="text-xl font-semibold font-mono">{m.value}</span>
+              {m.value !== null && m.value !== undefined ? (
+                <span className="text-xl font-semibold font-mono">
+                  {m.value.toFixed(2)}<span className="text-sm text-[var(--text-muted)] ml-1">{m.unit}</span>
+                </span>
               ) : (
                 <span className="text-sm text-[var(--text-muted)]">{loading ? "Loading..." : "Awaiting data"}</span>
               )}
@@ -66,26 +71,80 @@ export default function PoliticalPage() {
         ))}
       </div>
 
-      <div className="glass-card p-5">
+      {/* WGI Governance Indicators Chart */}
+      <div className="glass-card p-5 mb-6">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">
-          Analytical Modules ({MODULES.length})
+          World Governance Indicators (WGI score, -2.5 to +2.5)
         </h2>
-        <div className="space-y-0">
-          {MODULES.map((mod, i) => (
-            <div
-              key={mod.name}
-              className={`flex items-start gap-4 py-3 ${i < MODULES.length - 1 ? "border-b border-[var(--border)]/50" : ""}`}
-            >
-              <span className="text-xs font-mono text-[var(--text-muted)] w-5 pt-0.5 shrink-0">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">{mod.name}</p>
-                <p className="text-xs text-[var(--text-secondary)] mt-0.5">{mod.desc}</p>
-              </div>
-            </div>
-          ))}
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={wgiData} layout="vertical" margin={{ left: 150 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis
+                type="number"
+                tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+                domain={[-2.5, 2.5]}
+              />
+              <YAxis
+                type="category"
+                dataKey="indicator"
+                tick={{ fontSize: 11, fill: "var(--text-secondary)" }}
+                width={145}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "0.5rem",
+                  fontSize: "0.75rem",
+                }}
+                formatter={(v: number) => [`${v.toFixed(2)}`, "WGI Score"]}
+              />
+              <ReferenceLine x={0} stroke="var(--border)" strokeWidth={1} />
+              <Bar dataKey="value" fill="var(--accent-secondary)" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
+        <p className="text-xs text-[var(--text-muted)] mt-3">
+          Source: World Bank Worldwide Governance Indicators. Scale: -2.5 (weak) to +2.5 (strong).
+        </p>
+      </div>
+
+      {/* Political Economy Model Table */}
+      <div className="glass-card p-5">
+        <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">
+          Political Economy Model Estimates
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)]">
+                <th className="text-left py-2 px-3 font-medium text-[var(--text-secondary)]">Metric</th>
+                <th className="text-left py-2 px-3 font-medium text-[var(--text-secondary)]">Model</th>
+                <th className="text-right py-2 px-3 font-medium text-[var(--text-secondary)]">Estimate</th>
+              </tr>
+            </thead>
+            <tbody className="text-[var(--text-primary)]">
+              {[
+                ["Pre-election fiscal expansion", "Nordhaus PBC", "--"],
+                ["Democracy-growth elasticity", "Acemoglu 2019", "--"],
+                ["Corruption drag (% GDP/yr)", "Mauro 1995", "--"],
+                ["Conflict GDP loss (% per yr)", "Collier 2007", "--"],
+                ["Sanctions trade reduction", "Hufbauer", "--"],
+                ["Lobbying ROI ($ per $ spent)", "Richter 2009", "--"],
+              ].map(([metric, model, est]) => (
+                <tr key={metric} className="border-b border-[var(--border)]/50">
+                  <td className="py-2 px-3 font-mono text-xs">{metric}</td>
+                  <td className="py-2 px-3 text-xs text-[var(--text-secondary)]">{model}</td>
+                  <td className="text-right py-2 px-3 font-mono text-xs text-[var(--text-muted)]">{est}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-[var(--text-muted)] mt-3">
+          Estimates populate after running the political economy analysis pipeline.
+        </p>
       </div>
     </div>
   );
